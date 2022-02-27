@@ -3,6 +3,7 @@ import { doc, getDocs, collection, setDoc } from 'firebase/firestore'
 import { CurrentData } from './types/data'
 import { createHash } from 'crypto'
 import { auth0Management } from './auth0'
+// import axios, { AxiosRequestConfig } from 'axios'
 
 export async function getContributionAndBalance(userId: string): Promise<{ balance: number; contribution: number }> {
   const returnFlag = { balance: 50, contribution: 100 }
@@ -42,6 +43,24 @@ export async function getCurrents(userId: string): Promise<CurrentData[]> {
 }
 
 export async function updateContribution(value: number, userId: string) {
+  /* const options: AxiosRequestConfig = {
+    method: 'PATCH',
+    url: `https://dev-zodr-hta.us.auth0.com/api/v2/users/${encodeURI(userId)}`,
+    headers: {
+      'content-type': 'application/json',
+      authorization: `Bearer ${process.env.NEXT_PUBLIC_AUTH0_API_TOKEN}`
+    },
+    data: { user_metadata: { contribution: value } }
+  }
+
+  axios(options)
+    .then(response => {
+      // console.log(response.data)
+    })
+    .catch(error => {
+      console.log(error)
+    }) */
+
   auth0Management.patchUserMetadata(userId, { contribution: value }, error => {
     if (error) console.log(error)
   })
