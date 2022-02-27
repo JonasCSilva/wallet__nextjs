@@ -1,5 +1,5 @@
 {
-  "name": "next-personal-starter",
+  "name": "wallet",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -9,17 +9,25 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@auth0/nextjs-auth0": "^1.7.0",
+    "@chakra-ui/icons": "^1.1.7",
     "@chakra-ui/react": "^1.8.3",
     "@emotion/react": "^11.7.1",
     "@emotion/styled": "^11.6.0",
+    "axios": "^0.26.0",
+    "firebase": "^9.6.7",
     "framer-motion": "^6.2.6",
+    "googleapis": "^95.0.0",
     "next": "12.1.0",
     "react": "17.0.2",
-    "react-dom": "17.0.2"
+    "react-dom": "17.0.2",
+    "react-table": "^7.7.0",
+    "swr": "^1.2.2"
   },
   "devDependencies": {
     "@types/node": "17.0.18",
     "@types/react": "17.0.39",
+    "@types/react-table": "^7.7.9",
     "@typescript-eslint/eslint-plugin": "^5.12.0",
     "eslint": "8.9.0",
     "eslint-config-next": "12.1.0",
