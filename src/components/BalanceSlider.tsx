@@ -12,20 +12,13 @@ import {
   Heading,
   Skeleton
 } from '@chakra-ui/react'
-import { doc, updateDoc } from 'firebase/firestore'
 import { useState, useEffect } from 'react'
-import { db } from '../firebase'
+import { updateBalance } from '../databaseFunctions'
 import { BalanceSliderProps } from '../types/components'
 
 export default function BalanceSlider({ setUserData, userData, id, isLoadingSk }: BalanceSliderProps) {
   const [value, setValue] = useState(50)
   const handleChange = (value: number) => setValue(value)
-
-  async function updateBalance(value: number, userId: string) {
-    await updateDoc(doc(db, 'usersdata', userId), {
-      balance: value
-    })
-  }
 
   useEffect(() => {
     setValue(userData.balance)

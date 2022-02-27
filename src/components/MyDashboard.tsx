@@ -4,7 +4,7 @@ import { Flex, Tab, Tabs, TabList, TabPanels, TabPanel, useColorMode } from '@ch
 import { UserData, TickerData, CurrentData, SumsData } from '../types/data'
 import MyTable from './Table'
 import headers from '../lib/headers'
-import { getContributionAndBalance, getCurrents } from '../firebaseFunctions'
+import { getContributionAndBalance, getCurrents } from '../databaseFunctions'
 import MyHeader from './MyHeader'
 import axios from 'axios'
 import { UserProfile } from '@auth0/nextjs-auth0'
@@ -59,8 +59,8 @@ export default function MyDashboard({ user }: { user: UserProfile }) {
   useEffect(() => {
     const unsubscribe = async () => {
       const mytickersPromise = axios.get<TickerData[][]>('/api/sheet').then((res: { data: TickerData[][] }) => res.data)
-      const ContributionAndBalancePromise = getContributionAndBalance('BSVP0x0gedLensFqfOTDKJxunK2')
-      const currentPromise = getCurrents('BSVP0x0gedLensFqfOTDKJxunK2')
+      const ContributionAndBalancePromise = getContributionAndBalance(user.sub as string)
+      const currentPromise = getCurrents(user.sub as string)
       const [mytickers2, ContributionAndBalance, currents] = await Promise.all([
         mytickersPromise,
         ContributionAndBalancePromise,
@@ -237,7 +237,7 @@ export default function MyDashboard({ user }: { user: UserProfile }) {
         isLoadingSk={isLoadingSk}
         userData={userData}
         setUserData={setUserData}
-        myId={'BSVP0x0gedLensFqfOTDKJxunK2'}
+        myId={user.sub as string}
         tickers={tickers}
         userName={user.name as string}
       />
@@ -253,7 +253,7 @@ export default function MyDashboard({ user }: { user: UserProfile }) {
               data={dataT.tickersD}
               isLoadingSk={isLoadingSk}
               sums={sumsD.current}
-              myId={'BSVP0x0gedLensFqfOTDKJxunK2'}
+              myId={user.sub as string}
               setUserData={setUserData}
               userData={userData}
             />
@@ -264,7 +264,7 @@ export default function MyDashboard({ user }: { user: UserProfile }) {
               data={dataT.tickersF}
               isLoadingSk={isLoadingSk}
               sums={sumsF.current}
-              myId={'BSVP0x0gedLensFqfOTDKJxunK2'}
+              myId={user.sub as string}
               setUserData={setUserData}
               userData={userData}
             />

@@ -10,6 +10,7 @@
     "react/state-in-constructor": "off",
     "react/forbid-prop-types": "off",
     "react-hooks/exhaustive-deps": "off",
+    "prefer-const": "warn",
     "comma-dangle": ["warn", "never"],
     "semi": ["warn", "never"],
     "max-len": ["warn", { "code": 120 }],

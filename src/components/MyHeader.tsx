@@ -10,7 +10,7 @@ import {
   FormControl,
   useColorMode
 } from '@chakra-ui/react'
-import { updateContribution } from '../firebaseFunctions'
+import { updateContribution } from '../databaseFunctions'
 import BalanceSlider from './BalanceSlider'
 import ChangeThemeButton from './ChangeThemeButton'
 import MyAvatar from './MyAvatar'
