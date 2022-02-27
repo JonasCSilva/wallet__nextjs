@@ -2,6 +2,8 @@ import { db } from './firebase'
 import { doc, getDoc, setDoc, getDocs, collection, updateDoc } from 'firebase/firestore'
 import { CurrentData } from './types/data'
 
+const defaultValues = { balance: 50, contribution: 100 }
+
 export async function getContributionAndBalance(userId: string): Promise<{ balance: number; contribution: number }> {
   const docSnap = await getDoc(doc(db, 'usersdata', userId))
   if (docSnap.exists()) {
@@ -10,18 +12,12 @@ export async function getContributionAndBalance(userId: string): Promise<{ balan
       (docSnap.data().balance || docSnap.data().balance === 0)
     ) {
       return { balance: Number(docSnap.data().balance), contribution: Number(docSnap.data().contribution) }
-    } else if (docSnap.data().contribution || docSnap.data().contribution === 0) {
-      await setDoc(doc(db, 'usersdata', userId), { ...docSnap.data(), balance: 50 })
-      return { balance: 50, contribution: docSnap.data().contribution }
-    } else if (docSnap.data().balance || docSnap.data().balance === 0) {
-      await setDoc(doc(db, 'usersdata', userId), { ...docSnap.data(), contribution: 100 })
-      return { balance: docSnap.data().balance, contribution: 100 }
     } else {
-      await setDoc(doc(db, 'usersdata', userId), { balance: 50, contribution: 100 })
-      return { balance: 50, contribution: 100 }
+      await setDoc(doc(db, 'usersdata', userId), defaultValues)
+      return defaultValues
     }
   } else {
-    await setDoc(doc(db, 'usersdata', userId), { balance: 50, contribution: 100 })
+    await setDoc(doc(db, 'usersdata', userId), defaultValues)
     return { balance: 50, contribution: 100 }
   }
 }

@@ -1,10 +1,10 @@
-import { Heading, useColorMode, Center, Spinner, Flex, HStack } from '@chakra-ui/react'
+import { Heading, useColorMode, Center, Spinner, Flex, HStack, Button } from '@chakra-ui/react'
 import type { NextPage } from 'next'
-import { topBg } from '../theme'
+import { bg3, bgColor, buttonHoverColor, hoverGray, topBg } from '../theme'
 import { Link } from '@chakra-ui/react'
 import { useUser } from '@auth0/nextjs-auth0'
 import ChangeThemeButton from '../components/ChangeThemeButton'
-import WalletIcon from '../../public/wallet-svgrepo-com.svg'
+import WalletIcon from '../../public/wallet.svg'
 import Image from 'next/image'
 import NextLink from 'next/link'
 
@@ -42,9 +42,32 @@ const Home: NextPage = () => {
         <ChangeThemeButton />
         <HStack justify='space-between'>
           {user ? (
-            <NextLink href='/dashboard'>Acessar Conta</NextLink>
+            <NextLink href='/dashboard' passHref>
+              <Button
+                colorScheme='green'
+                borderColor={colorMode === 'light' ? 'black' : 'white'}
+                color={colorMode === 'light' ? 'black' : 'white'}
+                _hover={{ bg: hoverGray[colorMode] }}
+                size='lg'
+                variant='outline'
+                border='2px'
+                fontSize={26}
+              >
+                Acessar conta
+              </Button>
+            </NextLink>
           ) : (
-            <Link href='/api/auth/login?returnTo=/dashboard'>Login</Link>
+            <Link href='/api/auth/login?returnTo=/dashboard'>
+              <Button
+                bg={bg3[colorMode]}
+                color={bgColor[colorMode]}
+                _hover={{ bg: buttonHoverColor[colorMode] }}
+                size='lg'
+                fontSize={26}
+              >
+                Login
+              </Button>
+            </Link>
           )}
         </HStack>
       </Flex>
@@ -63,18 +86,3 @@ const Home: NextPage = () => {
 }
 
 export default Home
-
-/* <NextLink href={'/' + path} passHref>
-  <Button
-    colorScheme='green'
-    borderColor={colorMode === 'light' ? 'black' : 'white'}
-    color={colorMode === 'light' ? 'black' : 'white'}
-    _hover={{ bg: hoverGray }}
-    size='lg'
-    variant='outline'
-    border='2px'
-    fontSize={26}
-  >
-    Acessar conta
-  </Button>
-</NextLink> */

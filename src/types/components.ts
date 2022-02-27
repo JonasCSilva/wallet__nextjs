@@ -1,7 +1,6 @@
 import { Dispatch, SetStateAction } from 'react'
 import { Cell, Column } from 'react-table'
 import { TickerData, UserData } from './data'
-import { FormikErrors, FormikTouched, FieldInputProps } from 'formik'
 
 export type TableProps = {
   columns: Column<TickerData>[]
@@ -19,45 +18,6 @@ export type TableProps = {
   myId: string
   setUserData: Dispatch<SetStateAction<UserData>>
   userData: UserData
-}
-
-export type FieldProps = {
-  errors: FormikErrors<{
-    email: string
-    name: string
-    password: string
-    newEmail: string
-    newPassword: string
-  }>
-  touched: FormikTouched<{
-    email: string
-    name: string
-    password: string
-    newEmail: string
-    newPassword: string
-  }>
-  field: FieldInputProps<string>
-  placeholder: string
-  label: string
-}
-
-export type SubmitButtonProps = {
-  errors: FormikErrors<{
-    name?: string
-    email?: string
-    password?: string
-    newEmail?: string
-    newPassword?: string
-  }>
-  values: {
-    name?: string
-    email?: string
-    password?: string
-    newEmail?: string
-    newPassword?: string
-  }
-  isSubmitting: boolean
-  placeholder: string
 }
 
 export type MyAvatarProps = {

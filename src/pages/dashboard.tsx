@@ -24,7 +24,7 @@ function Dashboard() {
 
   return (
     <Center>
-      <Heading height='100vh'>Unexpected error</Heading>
+      <Heading height='100vh'>Unexpected Error</Heading>
     </Center>
   )
 }
