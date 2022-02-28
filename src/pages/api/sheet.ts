@@ -19,7 +19,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   })
 
   if (!response.data.valueRanges) {
-    res.status(500).json([])
+    res.status(500).json({ error: 'failed to load value ranges' })
   } else {
     const rows1 = response.data.valueRanges[0].values as [string, string, string, string][]
     const rows2 = response.data.valueRanges[1].values as [string, string, string, string][]

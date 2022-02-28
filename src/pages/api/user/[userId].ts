@@ -29,8 +29,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           res.status(200).json(user)
         }
       } catch (error) {
-        console.error(error)
-        res.status(400).json(defaultMetadata)
+        res.status(500).json(error)
       }
       break
     case 'PATCH':
@@ -43,8 +42,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           newMetadata
         })
       } catch (error) {
-        console.error(error)
-        res.status(500).json(defaultMetadata)
+        res.status(500).json(error)
       }
       break
     default:
