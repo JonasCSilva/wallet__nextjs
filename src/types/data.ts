@@ -1,7 +1,10 @@
-export type UserData = {
-  contribution: number
-  currents: CurrentData[]
-  balance: number
+export type UserFull = {
+  name: string
+  user_metadata: {
+    balance: number
+    contribution: number
+    currents: CurrentData[]
+  }
 }
 
 export type TickerData = {

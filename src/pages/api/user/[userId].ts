@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import { auth0Management } from '../../../auth0'
 
-const defaultResult = { balance: 50, contribution: 100, currents: [] }
+const defaultMetadata = { balance: 50, contribution: 100, currents: [] }
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const {
@@ -22,13 +22,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           metadata.balance ??= 50
           metadata.contribution ??= 100
           metadata.currents ??= []
-          res.status(200).json(metadata)
+          user.user_metadata = metadata
+          res.status(200).json(user)
         } else {
-          res.status(500).json(defaultResult)
+          user.user_metadata = defaultMetadata
+          res.status(200).json(user)
         }
       } catch (error) {
         console.error(error)
-        res.status(400).json(defaultResult)
+        res.status(400).json(defaultMetadata)
       }
       break
     case 'PATCH':
@@ -42,7 +44,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         })
       } catch (error) {
         console.error(error)
-        res.status(500).json(defaultResult)
+        res.status(500).json(defaultMetadata)
       }
       break
     default:

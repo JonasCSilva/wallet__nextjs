@@ -10,31 +10,35 @@ import {
   PopoverContent,
   PopoverTrigger,
   useColorMode,
-  Link
+  Link,
+  Skeleton
 } from '@chakra-ui/react'
+import useUserData from '../hooks/useUserData'
 import { bg3, bgColor, buttonHoverColor } from '../theme'
-import { MyAvatarProps } from '../types/components'
 
-export default function MyAvatar({ userName }: MyAvatarProps) {
+export default function MyAvatar() {
+  const { userFull, isLoading } = useUserData()
   const { colorMode } = useColorMode()
 
   return (
     <Flex justify='center' align='center' my={3}>
       <Popover>
         <PopoverTrigger>
-          <Avatar size='md'>
-            <Tooltip label='Configurar perfil' hasArrow openDelay={200}>
-              <Avatar
-                name={userName ? userName : undefined}
-                bg={bg3}
-                color={bgColor[colorMode]}
-                _hover={{ bg: buttonHoverColor }}
-                position='absolute'
-                cursor='pointer'
-                size='md'
-              />
-            </Tooltip>
-          </Avatar>
+          <Skeleton isLoaded={!isLoading}>
+            <Avatar size='md'>
+              <Tooltip label='Configurar perfil' hasArrow openDelay={200}>
+                <Avatar
+                  name={userFull?.name}
+                  bg={bg3}
+                  color={bgColor[colorMode]}
+                  _hover={{ bg: buttonHoverColor }}
+                  position='absolute'
+                  cursor='pointer'
+                  size='md'
+                />
+              </Tooltip>
+            </Avatar>
+          </Skeleton>
         </PopoverTrigger>
         <PopoverContent w={32}>
           <PopoverArrow />
@@ -46,7 +50,6 @@ export default function MyAvatar({ userName }: MyAvatarProps) {
               bg={bg3}
               color={bgColor[colorMode]}
               _hover={{ bg: buttonHoverColor }}
-              // onClick={() => {router.push('/profile')}}
             >
               Perfil
             </Button> */}

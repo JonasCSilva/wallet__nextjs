@@ -1,32 +1,20 @@
-import { useUser, withPageAuthRequired } from '@auth0/nextjs-auth0'
+import { withPageAuthRequired } from '@auth0/nextjs-auth0'
 import { Center, Heading, Spinner } from '@chakra-ui/react'
 import MyDashboard from '../components/MyDashboard'
+import useUserData from '../hooks/useUserData'
 
 function Dashboard() {
-  const { user, error, isLoading } = useUser()
+  const { isError } = useUserData()
 
-  if (isLoading)
-    return (
-      <Center height='100vh'>
-        <Spinner size='xl' />
-      </Center>
-    )
-  if (error)
+  if (isError) {
     return (
       <Center>
-        <Heading height='100vh'>{error.message}</Heading>
+        <Heading height='100vh'>Unexpected Error</Heading>
       </Center>
     )
-
-  if (user) {
-    return <MyDashboard user={user} />
   }
 
-  return (
-    <Center>
-      <Heading height='100vh'>Unexpected Error</Heading>
-    </Center>
-  )
+  return <MyDashboard />
 }
 
 export default withPageAuthRequired(Dashboard, {

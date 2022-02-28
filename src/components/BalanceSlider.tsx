@@ -1,3 +1,4 @@
+import { useUser } from '@auth0/nextjs-auth0'
 import {
   Flex,
   Slider,
@@ -13,28 +14,33 @@ import {
   Skeleton
 } from '@chakra-ui/react'
 import axios from 'axios'
-import { useState, useEffect } from 'react'
-import { BalanceSliderProps } from '../types/components'
+import { useState, useEffect, useContext } from 'react'
+import TickersContext from '../contexts/UserMetadataContext'
+import useUserData from '../hooks/useUserData'
 
-export default function BalanceSlider({ setUserData, userData, id, isLoadingSk }: BalanceSliderProps) {
+export default function BalanceSlider() {
+  const { userMetadata, setUserMetadata } = useContext(TickersContext)
+
+  const { isLoading } = useUserData()
+  const { user } = useUser()
   const [value, setValue] = useState(50)
   const handleChange = (value: number) => setValue(value)
 
   useEffect(() => {
-    setValue(userData.balance)
-  }, [userData.balance])
+    setValue(userMetadata.balance)
+  }, [userMetadata.balance])
 
   return (
     <Flex justify='center' align='center'>
-      <Skeleton isLoaded={!isLoadingSk}>
+      <Skeleton isLoaded={!isLoading}>
         <NumberInput
           w={20}
           inputMode={'numeric'}
           value={value}
           onBlur={e => {
             const val = Number(e.target.value)
-            axios.patch(`api/userdata/${id}`, val).then(res => res.data)
-            setUserData(prevState => ({
+            axios.patch(`api/user/${user?.sub}`, val).then(res => res.data)
+            setUserMetadata(prevState => ({
               ...prevState,
               balance: val
             }))
@@ -52,7 +58,7 @@ export default function BalanceSlider({ setUserData, userData, id, isLoadingSk }
       <Heading size='lg' fontWeight={'500'} mx={3}>
         Div
       </Heading>
-      <Skeleton isLoaded={!isLoadingSk}>
+      <Skeleton isLoaded={!isLoading}>
         <Flex justify='center' align='center'>
           <Slider
             aria-label='slider-ex-1'
@@ -62,8 +68,8 @@ export default function BalanceSlider({ setUserData, userData, id, isLoadingSk }
             step={5}
             h='100%'
             onChangeEnd={balance => {
-              axios.patch(`api/userdata/${id}`, { data: { balance } }).then(res => res.data)
-              setUserData(prevState => ({
+              axios.patch(`api/user/${user?.sub}`, { data: { balance } }).then(res => res.data)
+              setUserMetadata(prevState => ({
                 ...prevState,
                 balance
               }))

@@ -1,3 +1,4 @@
+import { useUser } from '@auth0/nextjs-auth0'
 import {
   NumberInput,
   NumberInputField,
@@ -6,9 +7,14 @@ import {
   NumberIncrementStepper
 } from '@chakra-ui/react'
 import axios from 'axios'
+import { useContext } from 'react'
+import TickersContext from '../contexts/UserMetadataContext'
 import { CurrentInputProps } from '../types/components'
 
-export default function CurrentInput({ cell, myId, userData, setUserData }: CurrentInputProps) {
+export default function CurrentInput({ cell }: CurrentInputProps) {
+  const { user } = useUser()
+  const { userMetadata, setUserMetadata } = useContext(TickersContext)
+
   return (
     <NumberInput
       defaultValue={cell.value}
@@ -17,7 +23,7 @@ export default function CurrentInput({ cell, myId, userData, setUserData }: Curr
       size='sm'
       borderRadius={'12px'}
       onBlur={e => {
-        const currents = [...userData.currents]
+        const currents = [...userMetadata.currents]
         let foundFlag = false
         for (const item of currents) {
           if (item.name === cell.row.values.name) {
@@ -28,8 +34,8 @@ export default function CurrentInput({ cell, myId, userData, setUserData }: Curr
         if (!foundFlag) {
           currents.push({ name: cell.row.values.name, current: Number(e.target.value) })
         }
-        axios.patch(`api/userdata/${myId}`, { data: { currents } }).then(res => res.data)
-        setUserData(prevState => ({
+        axios.patch(`api/user/${user?.sub}`, { data: { currents } }).then(res => res.data)
+        setUserMetadata(prevState => ({
           ...prevState,
           currents
         }))

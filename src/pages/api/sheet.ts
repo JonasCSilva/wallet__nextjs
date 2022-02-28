@@ -7,7 +7,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const jwt = new google.auth.JWT(
     process.env.GOOGLE_SHEETS_CLIENT_EMAIL,
     undefined,
-    (process.env.GOOGLE_SHEETS_PRIVATE_KEY || '').replace(/\\n/g, '\n'),
+    process.env.GOOGLE_SHEETS_PRIVATE_KEY as string,
     target
   )
 
@@ -19,7 +19,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   })
 
   if (!response.data.valueRanges) {
-    res.status(200).json([])
+    res.status(500).json([])
   } else {
     const rows1 = response.data.valueRanges[0].values as [string, string, string, string][]
     const rows2 = response.data.valueRanges[1].values as [string, string, string, string][]
