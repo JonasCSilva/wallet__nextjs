@@ -1,4 +1,4 @@
-import { Table, Thead, Tbody, Tr, Th, Td, Text, chakra, Skeleton, Tfoot, useColorMode } from '@chakra-ui/react'
+import { Table, Thead, Tbody, Tr, Th, Td, Text, chakra, Skeleton, Tfoot } from '@chakra-ui/react'
 import { TriangleDownIcon, TriangleUpIcon } from '@chakra-ui/icons'
 import { useTable, useSortBy } from 'react-table'
 import { TableProps } from '../types/components'
@@ -6,8 +6,6 @@ import CurrentInput from './CurrentInput'
 import { bg3 } from '../theme'
 
 export default function MyTable({ columns, data, isLoadingSk, sums, myId, setUserData, userData }: TableProps) {
-  const { colorMode } = useColorMode()
-
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable(
     {
       columns: columns,
@@ -32,7 +30,7 @@ export default function MyTable({ columns, data, isLoadingSk, sums, myId, setUse
 
   const footerStyle = {
     fontSize: 12,
-    color: bg3[colorMode],
+    color: bg3,
     py: 4,
     textAlign: 'center' as const
   }

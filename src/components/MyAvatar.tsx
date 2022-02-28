@@ -26,9 +26,9 @@ export default function MyAvatar({ userName }: MyAvatarProps) {
             <Tooltip label='Configurar perfil' hasArrow openDelay={200}>
               <Avatar
                 name={userName ? userName : undefined}
-                bg={bg3[colorMode]}
+                bg={bg3}
                 color={bgColor[colorMode]}
-                _hover={{ bg: buttonHoverColor[colorMode] }}
+                _hover={{ bg: buttonHoverColor }}
                 position='absolute'
                 cursor='pointer'
                 size='md'
@@ -43,9 +43,9 @@ export default function MyAvatar({ userName }: MyAvatarProps) {
             {/* <Button
               my={4}
               size='sm'
-              bg={bg3[colorMode]}
+              bg={bg3}
               color={bgColor[colorMode]}
-              _hover={{ bg: buttonHoverColor[colorMode] }}
+              _hover={{ bg: buttonHoverColor }}
               // onClick={() => {router.push('/profile')}}
             >
               Perfil

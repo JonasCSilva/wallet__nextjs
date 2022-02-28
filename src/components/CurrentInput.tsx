@@ -6,7 +6,7 @@ import {
   NumberIncrementStepper
 } from '@chakra-ui/react'
 import { CurrentInputProps } from '../types/components'
-import { updateCurrent } from '../databaseFunctions'
+import { updateCurrent } from '../serverFunctions'
 
 export default function CurrentInput({ cell, myId, userData, setUserData }: CurrentInputProps) {
   return (

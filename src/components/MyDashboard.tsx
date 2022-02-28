@@ -4,14 +4,17 @@ import { Flex, Tab, Tabs, TabList, TabPanels, TabPanel, useColorMode } from '@ch
 import { UserData, TickerData, CurrentData, SumsData } from '../types/data'
 import MyTable from './Table'
 import headers from '../lib/headers'
-import { getContributionAndBalance, getCurrents } from '../databaseFunctions'
+import { getContributionAndBalance, getCurrents } from '../serverFunctions'
 import MyHeader from './MyHeader'
 import axios from 'axios'
 import { UserProfile } from '@auth0/nextjs-auth0'
 import { bg3, bgColor } from '../theme'
+import { getCurrent, rounder, total } from '../dashboardFunctions'
 
 export default function MyDashboard({ user }: { user: UserProfile }) {
   const { colorMode } = useColorMode()
+
+  console.log(user)
 
   const [userData, setUserData] = useState<UserData>({
     contribution: 100,
@@ -49,7 +52,7 @@ export default function MyDashboard({ user }: { user: UserProfile }) {
   const tabStyle = {
     fontSize: 20,
     _selected: {
-      color: bg3[colorMode],
+      color: bg3,
       borderWidth: 1,
       borderColor: 'rgba(255, 255, 255, 0.16)',
       borderBottomColor: bgColor[colorMode]
@@ -172,21 +175,6 @@ export default function MyDashboard({ user }: { user: UserProfile }) {
     setTickers({ tickersD: tickersD22, tickersF: tickersF22 })
   }
 
-  function rounder(investR: number, price: number) {
-    const test = investR / price
-    if (Math.sign(test) === 1 && test % 1 > 0.66) {
-      return Math.ceil(test)
-    } else if (Math.sign(test) === 1 && test % 1 < 0.66) {
-      return Math.floor(test)
-    } else if (Math.sign(test) === -1 && test % 1 > -0.66) {
-      return Math.ceil(test)
-    } else if (Math.sign(test) === -1 && test % 1 < -0.66) {
-      return Math.floor(test)
-    } else {
-      return test
-    }
-  }
-
   function setMgcNmbs(t: TickerData[], firstTotal: number, balance2: number) {
     t.forEach(t => {
       if (t.alocation === 0) {
@@ -212,24 +200,9 @@ export default function MyDashboard({ user }: { user: UserProfile }) {
     }
   }
 
-  function getCurrent(name: string, currents: CurrentData[]): number {
-    for (let index = 0; index < currents.length; index++) {
-      if (currents[index].name == name) {
-        return currents[index].current
-      }
-    }
-    return 0
-  }
-
   const dataT = useMemo(() => tickers, [tickers])
 
   const columns = useMemo(() => headers, [])
-
-  function total(tickers: TickerData[]) {
-    let sum = 0
-    tickers.map(t => (sum += t.current * t.price))
-    return sum
-  }
 
   return (
     <Flex justify='center' align='center' direction='column'>

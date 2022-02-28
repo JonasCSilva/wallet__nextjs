@@ -11,7 +11,7 @@ export default function ChangeThemeButton() {
       <Switch
         isChecked={colorMode === 'light' ? false : true}
         size='md'
-        colorScheme={switchBg[colorMode]}
+        colorScheme={switchBg}
         mx={3}
         pointerEvents='none'
       />

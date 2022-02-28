@@ -58,13 +58,7 @@ const Home: NextPage = () => {
             </NextLink>
           ) : (
             <Link href='/api/auth/login?returnTo=/dashboard'>
-              <Button
-                bg={bg3[colorMode]}
-                color={bgColor[colorMode]}
-                _hover={{ bg: buttonHoverColor[colorMode] }}
-                size='lg'
-                fontSize={26}
-              >
+              <Button bg={bg3} color={bgColor[colorMode]} _hover={{ bg: buttonHoverColor }} size='lg' fontSize={26}>
                 Login
               </Button>
             </Link>
@@ -78,7 +72,7 @@ const Home: NextPage = () => {
           </Heading>
         </Flex>
         <Flex align='center' justify='center' w={'50%'}>
-          <Image src={WalletIcon} alt='Wallet Icon' width={350} height={350} />
+          <Image priority src={WalletIcon} alt='Wallet Icon' width={350} height={350} />
         </Flex>
       </Flex>
     </Flex>

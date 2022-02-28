@@ -13,7 +13,7 @@ import {
   Skeleton
 } from '@chakra-ui/react'
 import { useState, useEffect } from 'react'
-import { updateBalance } from '../databaseFunctions'
+import { updateBalance } from '../serverFunctions'
 import { BalanceSliderProps } from '../types/components'
 
 export default function BalanceSlider({ setUserData, userData, id, isLoadingSk }: BalanceSliderProps) {
