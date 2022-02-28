@@ -1,11 +1,29 @@
 import { Table, Thead, Tbody, Tr, Th, Td, Text, chakra, Skeleton, Tfoot } from '@chakra-ui/react'
 import { TriangleDownIcon, TriangleUpIcon } from '@chakra-ui/icons'
-import { useTable, useSortBy } from 'react-table'
-import { TableProps } from '../types/components'
+import { useTable, useSortBy, Column } from 'react-table'
 import CurrentInput from './CurrentInput'
 import { bg3 } from '../theme'
+import { TickerData } from '../types/data'
+import useUserData from '../hooks/useUserData'
 
-export default function MyTable({ columns, data, isLoadingSk, sums, myId, setUserData, userData }: TableProps) {
+export type TableProps = {
+  columns: Column<TickerData>[]
+  data: TickerData[]
+  isLoadingSk: boolean
+  sums: {
+    objectiveSum: number
+    alocationSum: number
+    objectiveRSum: number
+    currentRSum: number
+    currentPSum: number
+    investRSum: number
+    investCSum: number
+  }
+}
+
+export default function MyTable({ columns, data, sums }: TableProps) {
+  const { isLoading } = useUserData()
+
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable(
     {
       columns: columns,
@@ -87,10 +105,10 @@ export default function MyTable({ columns, data, isLoadingSk, sums, myId, setUse
                   color={cell.column.id === 'invest' && cell.value > 0 ? bg3 : undefined}
                   textAlign='center'
                 >
-                  <Skeleton isLoaded={!isLoadingSk}>
+                  <Skeleton isLoaded={!isLoading}>
                     {(() => {
                       if (cell.column.id === 'current') {
-                        return <CurrentInput cell={cell} myId={myId} setUserData={setUserData} userData={userData} />
+                        return <CurrentInput cell={cell} />
                       } else if (typeof cell.value === 'number') {
                         return <Text pr={4}>{frmt(cell.value)}</Text>
                       } else {
@@ -111,7 +129,7 @@ export default function MyTable({ columns, data, isLoadingSk, sums, myId, setUse
               case 6:
                 return (
                   <Th key={index} {...footerStyle}>
-                    <Skeleton isLoaded={!isLoadingSk}>
+                    <Skeleton isLoaded={!isLoading}>
                       <Text {...footerTextStyle}>{frmt(sums.alocationSum)}</Text>
                     </Skeleton>
                   </Th>
@@ -119,7 +137,7 @@ export default function MyTable({ columns, data, isLoadingSk, sums, myId, setUse
               case 7:
                 return (
                   <Th key={index} {...footerStyle}>
-                    <Skeleton isLoaded={!isLoadingSk}>
+                    <Skeleton isLoaded={!isLoading}>
                       <Text {...footerTextStyle}>{frmt(sums.objectiveRSum)}</Text>
                     </Skeleton>
                   </Th>
@@ -127,7 +145,7 @@ export default function MyTable({ columns, data, isLoadingSk, sums, myId, setUse
               case 9:
                 return (
                   <Th key={index} {...footerStyle}>
-                    <Skeleton isLoaded={!isLoadingSk}>
+                    <Skeleton isLoaded={!isLoading}>
                       <Text {...footerTextStyle}>{frmt(sums.currentRSum)}</Text>
                     </Skeleton>
                   </Th>
@@ -135,7 +153,7 @@ export default function MyTable({ columns, data, isLoadingSk, sums, myId, setUse
               case 10:
                 return (
                   <Th key={index} {...footerStyle}>
-                    <Skeleton isLoaded={!isLoadingSk}>
+                    <Skeleton isLoaded={!isLoading}>
                       <Text {...footerTextStyle}>{frmt(sums.currentPSum)}</Text>
                     </Skeleton>
                   </Th>
@@ -143,7 +161,7 @@ export default function MyTable({ columns, data, isLoadingSk, sums, myId, setUse
               case 11:
                 return (
                   <Th key={index} {...footerStyle}>
-                    <Skeleton isLoaded={!isLoadingSk}>
+                    <Skeleton isLoaded={!isLoading}>
                       <Text {...footerTextStyle}>{frmt(sums.investRSum)}</Text>
                     </Skeleton>
                   </Th>
@@ -151,7 +169,7 @@ export default function MyTable({ columns, data, isLoadingSk, sums, myId, setUse
               case 13:
                 return (
                   <Th key={index} {...footerStyle}>
-                    <Skeleton isLoaded={!isLoadingSk}>
+                    <Skeleton isLoaded={!isLoading}>
                       <Text {...footerTextStyle}>{frmt(sums.investCSum)}</Text>
                     </Skeleton>
                   </Th>

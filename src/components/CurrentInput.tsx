@@ -8,8 +8,13 @@ import {
 } from '@chakra-ui/react'
 import axios from 'axios'
 import { useContext } from 'react'
+import { Cell } from 'react-table'
 import TickersContext from '../contexts/UserMetadataContext'
-import { CurrentInputProps } from '../types/components'
+import { TickerData } from '../types/data'
+
+export type CurrentInputProps = {
+  cell: Cell<TickerData>
+}
 
 export default function CurrentInput({ cell }: CurrentInputProps) {
   const { user } = useUser()
