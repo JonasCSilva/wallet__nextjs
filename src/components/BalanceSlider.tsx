@@ -12,8 +12,8 @@ import {
   Heading,
   Skeleton
 } from '@chakra-ui/react'
+import axios from 'axios'
 import { useState, useEffect } from 'react'
-import { updateBalance } from '../serverFunctions'
 import { BalanceSliderProps } from '../types/components'
 
 export default function BalanceSlider({ setUserData, userData, id, isLoadingSk }: BalanceSliderProps) {
@@ -33,7 +33,7 @@ export default function BalanceSlider({ setUserData, userData, id, isLoadingSk }
           value={value}
           onBlur={e => {
             const val = Number(e.target.value)
-            updateBalance(val, id)
+            axios.patch(`api/userdata/${id}`, val).then(res => res.data)
             setUserData(prevState => ({
               ...prevState,
               balance: val
@@ -61,13 +61,13 @@ export default function BalanceSlider({ setUserData, userData, id, isLoadingSk }
             max={100}
             step={5}
             h='100%'
-            onChangeEnd={val => {
-              updateBalance(val, id)
+            onChangeEnd={balance => {
+              axios.patch(`api/userdata/${id}`, { data: { balance } }).then(res => res.data)
               setUserData(prevState => ({
                 ...prevState,
-                balance: val
+                balance
               }))
-              handleChange(val)
+              handleChange(balance)
             }}
             onChange={handleChange}
             focusThumbOnChange={false}

@@ -4,25 +4,25 @@ import { Flex, Tab, Tabs, TabList, TabPanels, TabPanel, useColorMode } from '@ch
 import { UserData, TickerData, CurrentData, SumsData } from '../types/data'
 import MyTable from './Table'
 import headers from '../lib/headers'
-import { getContributionAndBalance, getCurrents } from '../serverFunctions'
 import MyHeader from './MyHeader'
 import axios from 'axios'
 import { UserProfile } from '@auth0/nextjs-auth0'
 import { bg3, bgColor } from '../theme'
 import { getCurrent, rounder, total } from '../dashboardFunctions'
 
+type UserMetadata = { balance: number; contribution: number; currents: CurrentData[] }
+
 export default function MyDashboard({ user }: { user: UserProfile }) {
   const { colorMode } = useColorMode()
-
-  console.log(user)
 
   const [userData, setUserData] = useState<UserData>({
     contribution: 100,
     currents: [] as CurrentData[],
     balance: 50
   })
+
   const [isLoadingSk, setIsLoadingSk] = useState(true)
-  const renderedRef = useRef(false)
+
   const sumsD = useRef<SumsData>({
     objectiveSum: 0,
     alocationSum: 0,
@@ -61,28 +61,18 @@ export default function MyDashboard({ user }: { user: UserProfile }) {
 
   useEffect(() => {
     const unsubscribe = async () => {
-      const mytickersPromise = axios.get<TickerData[][]>('/api/sheet').then((res: { data: TickerData[][] }) => res.data)
-      const ContributionAndBalancePromise = getContributionAndBalance(user.sub as string)
-      const currentPromise = getCurrents(user.sub as string)
-      const [mytickers2, ContributionAndBalance, currents] = await Promise.all([
-        mytickersPromise,
-        ContributionAndBalancePromise,
-        currentPromise
-      ])
-      setUserData({
-        contribution: ContributionAndBalance.contribution,
-        balance: ContributionAndBalance.balance,
-        currents
-      })
+      const mytickersPromise = axios.get<TickerData[][]>('/api/sheet').then(res => res.data)
+      const usermetadataPromise = axios.get<UserMetadata>(`/api/userdata/${user.sub}`).then(res => res.data)
+      const [mytickers2, userMetadata] = await Promise.all([mytickersPromise, usermetadataPromise])
+      setUserData(userMetadata)
       mytickers.current = mytickers2
       UpdateData(
         mytickers.current[0],
         mytickers.current[1],
-        ContributionAndBalance.contribution,
-        currents,
-        ContributionAndBalance.balance
+        userMetadata.contribution,
+        userMetadata.currents,
+        userMetadata.balance
       )
-      renderedRef.current = true
       setIsLoadingSk(false)
     }
 
@@ -92,25 +82,6 @@ export default function MyDashboard({ user }: { user: UserProfile }) {
       unsubscribe()
     }
   }, [])
-
-  useEffect(() => {
-    const unsubscribe = async () => {
-      if (renderedRef.current === true && mytickers.current) {
-        UpdateData(
-          mytickers.current[0],
-          mytickers.current[1],
-          userData.contribution,
-          userData.currents,
-          userData.balance
-        )
-      }
-    }
-    unsubscribe()
-    return () => {
-      renderedRef.current = false
-      unsubscribe()
-    }
-  }, [userData])
 
   function UpdateData(
     tickersD2: TickerData[],

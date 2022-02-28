@@ -5,8 +5,8 @@ import {
   NumberDecrementStepper,
   NumberIncrementStepper
 } from '@chakra-ui/react'
+import axios from 'axios'
 import { CurrentInputProps } from '../types/components'
-import { updateCurrent } from '../serverFunctions'
 
 export default function CurrentInput({ cell, myId, userData, setUserData }: CurrentInputProps) {
   return (
@@ -17,16 +17,21 @@ export default function CurrentInput({ cell, myId, userData, setUserData }: Curr
       size='sm'
       borderRadius={'12px'}
       onBlur={e => {
-        updateCurrent(Number(e.target.value), myId, cell.row.values.name)
         const currents = [...userData.currents]
-        currents.map(item => {
-          if (item.name == cell.row.values.name) {
+        let foundFlag = false
+        for (const item of currents) {
+          if (item.name === cell.row.values.name) {
             item.current = Number(e.target.value)
+            foundFlag = true
           }
-        })
+        }
+        if (!foundFlag) {
+          currents.push({ name: cell.row.values.name, current: Number(e.target.value) })
+        }
+        axios.patch(`api/userdata/${myId}`, { data: { currents } }).then(res => res.data)
         setUserData(prevState => ({
           ...prevState,
-          current: currents
+          currents
         }))
         e.target.value = String(Number(e.target.value))
       }}

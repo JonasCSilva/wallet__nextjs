@@ -10,12 +10,12 @@ import {
   FormControl,
   useColorMode
 } from '@chakra-ui/react'
-import { updateContribution } from '../serverFunctions'
 import BalanceSlider from './BalanceSlider'
 import ChangeThemeButton from './ChangeThemeButton'
 import MyAvatar from './MyAvatar'
 import { MyHeaderProps } from '../types/components'
 import { topBg } from '../theme'
+import axios from 'axios'
 
 export default function MyHeader({ isLoadingSk, userData, setUserData, myId, tickers, userName }: MyHeaderProps) {
   const { colorMode } = useColorMode()
@@ -58,15 +58,16 @@ export default function MyHeader({ isLoadingSk, userData, setUserData, myId, tic
                 type='number'
                 defaultValue={userData.contribution === 0 ? '' : userData.contribution}
                 onBlur={e => {
-                  updateContribution(Number(e.target.value), myId)
+                  const contribution = Number(e.target.value)
+                  axios.patch(`api/userdata/${myId}`, { data: { contribution } }).then(res => res.data)
                   setUserData(prevState => ({
                     ...prevState,
-                    contribution: Number(e.target.value)
+                    contribution
                   }))
-                  if (Number(e.target.value) == 0) {
+                  if (contribution == 0) {
                     e.target.value = ''
                   } else {
-                    e.target.value = String(Number(e.target.value))
+                    e.target.value = String(contribution)
                   }
                 }}
               />
