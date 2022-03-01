@@ -1,6 +1,5 @@
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { Flex, Tab, Tabs, TabList, TabPanels, TabPanel, useColorMode } from '@chakra-ui/react'
-import { TickerData, CurrentData, UserFull } from '../types/data'
 import MyHeader from './MyHeader'
 import { bg3, bgColor } from '../theme'
 import useUserFullData from '../hooks/useUserFullData'
@@ -43,9 +42,6 @@ export default function MyDashboard() {
   useEffect(() => {
     const unsubscribe = async () => {
       // const mytickers2 = await axios.get<TickerData[][]>('/api/sheet').then(res => res.data)
-      // const usermetadataPromise = axios.get<UserFull>(`/api/user`).then(res => res.data)
-      // const [mytickers2, userMetadata] = await Promise.all([mytickersPromise, usermetadataPromise])
-      // setUserData(userMetadata)
       // mytickers.current = mytickers2
       /* UpdateData(
         mytickers.current[0],
@@ -70,12 +66,12 @@ export default function MyDashboard() {
   return (
     <Flex justify='center' align='center' direction='column'>
       <MyHeader
-        tickers={
-          /* tickers */ [] as unknown as {
+      /* tickers={
+          tickers[] as unknown as {
             tickersD: TickerData[]
             tickersF: TickerData[]
           }
-        }
+        } */
       />
       <Tabs isFitted variant='enclosed' width='90%' my={10} isLazy>
         <TabList>

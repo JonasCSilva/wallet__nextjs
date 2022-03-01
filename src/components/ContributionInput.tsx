@@ -1,36 +1,52 @@
-import { Input } from '@chakra-ui/react'
+import {
+  NumberDecrementStepper,
+  NumberIncrementStepper,
+  NumberInput,
+  NumberInputField,
+  NumberInputStepper,
+  Skeleton
+} from '@chakra-ui/react'
 import axios from 'axios'
-import useUserMetadataContext from '../hooks/useUserMetadataContext'
+import { useEffect, useState } from 'react'
+import useUserData from '../hooks/useUserFullData'
+import useUserContributionContext from '../hooks/useUserContributionContext'
 
 export default function ContributionInput() {
-  const [userMetadata, setUserMetadata] = useUserMetadataContext()
+  const [userContribution, setUserContribution] = useUserContributionContext()
+  const [value, setValue] = useState<number | string>(100)
+  const { isLoading } = useUserData()
+
+  useEffect(() => {
+    if (!isLoading) setValue(userContribution)
+  }, [isLoading])
 
   return (
-    <Input
-      borderLeftRadius={0}
-      h='full'
-      p={2}
-      w={32}
-      fontSize={14}
-      maxLength={9}
-      placeholder='Aporte'
-      type='number'
-      value={userMetadata.contribution === 0 ? '' : userMetadata.contribution}
-      onChange={e =>
-        setUserMetadata(prevState => ({
-          ...prevState,
-          contribution: Number(e.target.value)
-        }))
-      }
-      onBlur={e => {
-        const contribution = Number(e.target.value)
-        axios.patch(`api/user`, { data: { contribution } }).then(res => res.data)
-        if (contribution == 0) {
-          e.target.value = ''
-        } else {
-          e.target.value = String(contribution)
-        }
-      }}
-    />
+    <Skeleton isLoaded={!isLoading}>
+      <NumberInput
+        min={0}
+        max={9999}
+        w={28}
+        value={value === 0 ? '' : value}
+        onChange={newValue => {
+          if (newValue === '') {
+            setValue(newValue)
+          } else if (newValue.search(/\D/) && Number(newValue) <= 9999) {
+            const contribution = Number(newValue)
+            contribution <= 0 ? setValue('') : setValue(contribution)
+          }
+        }}
+        onBlur={e => {
+          const contribution = Number(e.target.value)
+          axios.patch(`api/user`, { data: { contribution } })
+          setUserContribution(contribution)
+        }}
+      >
+        <NumberInputField placeholder='Aporte' borderLeftRadius={0} />
+        <NumberInputStepper>
+          <NumberIncrementStepper />
+          <NumberDecrementStepper />
+        </NumberInputStepper>
+      </NumberInput>
+    </Skeleton>
   )
 }

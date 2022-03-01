@@ -14,18 +14,19 @@ import {
 } from '@chakra-ui/react'
 import axios from 'axios'
 import { useState, useEffect } from 'react'
+import useUserBalanceContext from '../hooks/useUserbalanceContext'
 import useUserFullData from '../hooks/useUserFullData'
-import useUserMetadataContext from '../hooks/useUserMetadataContext'
 
 export default function BalanceSlider() {
-  const [userMetadata, setUserMetadata] = useUserMetadataContext()
+  const [userBalance, setUserBalance] = useUserBalanceContext()
   const { isLoading } = useUserFullData()
   const [value, setValue] = useState(50)
+
   const handleChange = (value: number) => setValue(value)
 
   useEffect(() => {
-    setValue(userMetadata.balance)
-  }, [userMetadata.balance])
+    if (!isLoading) setValue(userBalance)
+  }, [isLoading])
 
   return (
     <Flex justify='center' align='center'>
@@ -34,16 +35,12 @@ export default function BalanceSlider() {
           w={20}
           inputMode={'numeric'}
           value={value}
+          onChange={value => handleChange(Number(value))}
           onBlur={e => {
-            const val = Number(e.target.value)
-            axios.patch(`api/user`, val).then(res => res.data)
-            setUserMetadata(prevState => ({
-              ...prevState,
-              balance: val
-            }))
-            handleChange(val)
+            const balance = Number(e.target.value)
+            axios.patch(`api/user`, { data: { balance } })
+            setUserBalance(balance)
           }}
-          onChange={e => handleChange(Number(e))}
         >
           <NumberInputField fontSize={14} textAlign='center' pl={1} />
           <NumberInputStepper>
@@ -63,14 +60,9 @@ export default function BalanceSlider() {
             min={0}
             max={100}
             step={5}
-            h='100%'
             onChangeEnd={balance => {
-              axios.patch(`api/user`, { data: { balance } }).then(res => res.data)
-              setUserMetadata(prevState => ({
-                ...prevState,
-                balance
-              }))
-              handleChange(balance)
+              axios.patch(`api/user`, { data: { balance } })
+              setUserBalance(balance)
             }}
             onChange={handleChange}
             focusThumbOnChange={false}

@@ -2,6 +2,9 @@ import { withPageAuthRequired } from '@auth0/nextjs-auth0'
 import { Center, Heading, Spinner } from '@chakra-ui/react'
 import MyDashboard from '../components/MyDashboard'
 import useUserFullData from '../hooks/useUserFullData'
+import UserContributionContextProvider from '../contexts/UserContributionContext'
+import UserBalanceContextProvider from '../contexts/UserBalanceContext'
+import UserCurrentsContextProvider from '../contexts/UserCurrentsContext'
 
 function Dashboard() {
   const { isError } = useUserFullData()
@@ -14,7 +17,15 @@ function Dashboard() {
     )
   }
 
-  return <MyDashboard />
+  return (
+    <UserContributionContextProvider>
+      <UserBalanceContextProvider>
+        <UserCurrentsContextProvider>
+          <MyDashboard />
+        </UserCurrentsContextProvider>
+      </UserBalanceContextProvider>
+    </UserContributionContextProvider>
+  )
 }
 
 export default withPageAuthRequired(Dashboard, {
