@@ -1,6 +1,5 @@
 import {
   Flex,
-  Input,
   Skeleton,
   Heading,
   Text,
@@ -14,12 +13,9 @@ import BalanceSlider from './BalanceSlider'
 import ChangeThemeButton from './ChangeThemeButton'
 import MyAvatar from './MyAvatar'
 import { topBg } from '../theme'
-import axios from 'axios'
-import { useUser } from '@auth0/nextjs-auth0'
 import { TickerData } from '../types/data'
-import useUserData from '../hooks/useUserData'
-import TickersContext from '../contexts/UserMetadataContext'
-import { useContext } from 'react'
+import useUserData from '../hooks/useUserFullData'
+import ContributionInput from './ContributionInput'
 
 type MyHeaderProps = {
   tickers: {
@@ -29,8 +25,6 @@ type MyHeaderProps = {
 }
 
 export default function MyHeader({ tickers }: MyHeaderProps) {
-  const { userMetadata, setUserMetadata } = useContext(TickersContext)
-  const { user } = useUser()
   const { isLoading } = useUserData()
   const { colorMode } = useColorMode()
 
@@ -61,32 +55,7 @@ export default function MyHeader({ tickers }: MyHeaderProps) {
               R$
             </InputLeftAddon>
             <Skeleton isLoaded={!isLoading}>
-              <Input
-                borderLeftRadius={0}
-                h='full'
-                p={2}
-                w={32}
-                fontSize={14}
-                maxLength={9}
-                placeholder='Aporte'
-                type='number'
-                value={userMetadata.contribution === 0 ? '' : userMetadata.contribution}
-                onChange={e =>
-                  setUserMetadata(prevState => ({
-                    ...prevState,
-                    contribution: Number(e.target.value)
-                  }))
-                }
-                onBlur={e => {
-                  const contribution = Number(e.target.value)
-                  axios.patch(`api/user/${user?.sub}`, { data: { contribution } }).then(res => res.data)
-                  if (contribution == 0) {
-                    e.target.value = ''
-                  } else {
-                    e.target.value = String(contribution)
-                  }
-                }}
-              />
+              <ContributionInput />
             </Skeleton>
           </InputGroup>
         </FormControl>

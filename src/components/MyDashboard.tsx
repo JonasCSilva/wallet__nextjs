@@ -3,7 +3,7 @@ import { Flex, Tab, Tabs, TabList, TabPanels, TabPanel, useColorMode } from '@ch
 import { TickerData, CurrentData, UserFull } from '../types/data'
 import MyHeader from './MyHeader'
 import { bg3, bgColor } from '../theme'
-import useUserData from '../hooks/useUserData'
+import useUserFullData from '../hooks/useUserFullData'
 
 const defaultSumsData = {
   objectiveSum: 0,
@@ -16,7 +16,7 @@ const defaultSumsData = {
 }
 
 export default function MyDashboard() {
-  const { userFull, isLoading } = useUserData()
+  const { userFullData, isLoading } = useUserFullData()
 
   const { colorMode } = useColorMode()
 
@@ -43,7 +43,7 @@ export default function MyDashboard() {
   useEffect(() => {
     const unsubscribe = async () => {
       // const mytickers2 = await axios.get<TickerData[][]>('/api/sheet').then(res => res.data)
-      // const usermetadataPromise = axios.get<UserFull>(`/api/user/${user.sub}`).then(res => res.data)
+      // const usermetadataPromise = axios.get<UserFull>(`/api/user`).then(res => res.data)
       // const [mytickers2, userMetadata] = await Promise.all([mytickersPromise, usermetadataPromise])
       // setUserData(userMetadata)
       // mytickers.current = mytickers2

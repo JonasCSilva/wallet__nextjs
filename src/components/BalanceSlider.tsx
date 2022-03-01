@@ -1,4 +1,3 @@
-import { useUser } from '@auth0/nextjs-auth0'
 import {
   Flex,
   Slider,
@@ -14,15 +13,13 @@ import {
   Skeleton
 } from '@chakra-ui/react'
 import axios from 'axios'
-import { useState, useEffect, useContext } from 'react'
-import TickersContext from '../contexts/UserMetadataContext'
-import useUserData from '../hooks/useUserData'
+import { useState, useEffect } from 'react'
+import useUserFullData from '../hooks/useUserFullData'
+import useUserMetadataContext from '../hooks/useUserMetadataContext'
 
 export default function BalanceSlider() {
-  const { userMetadata, setUserMetadata } = useContext(TickersContext)
-
-  const { isLoading } = useUserData()
-  const { user } = useUser()
+  const [userMetadata, setUserMetadata] = useUserMetadataContext()
+  const { isLoading } = useUserFullData()
   const [value, setValue] = useState(50)
   const handleChange = (value: number) => setValue(value)
 
@@ -39,7 +36,7 @@ export default function BalanceSlider() {
           value={value}
           onBlur={e => {
             const val = Number(e.target.value)
-            axios.patch(`api/user/${user?.sub}`, val).then(res => res.data)
+            axios.patch(`api/user`, val).then(res => res.data)
             setUserMetadata(prevState => ({
               ...prevState,
               balance: val
@@ -68,7 +65,7 @@ export default function BalanceSlider() {
             step={5}
             h='100%'
             onChangeEnd={balance => {
-              axios.patch(`api/user/${user?.sub}`, { data: { balance } }).then(res => res.data)
+              axios.patch(`api/user`, { data: { balance } }).then(res => res.data)
               setUserMetadata(prevState => ({
                 ...prevState,
                 balance

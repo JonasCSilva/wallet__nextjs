@@ -33,7 +33,7 @@ const Home: NextPage = () => {
       >
         <Heading size='4xl'>Wallet</Heading>
         <ChangeThemeButton />
-        <Skeleton isLoaded={!isLoading}>
+        <Skeleton isLoaded={!isLoading} w={60} display='flex' justifyContent='center'>
           <Flex justify='space-between'>
             {!isLoading && user ? (
               <NextLink href='/dashboard' passHref>

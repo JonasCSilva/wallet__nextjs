@@ -1,8 +1,9 @@
 import { TickerData } from '../../types/data'
 import { google } from 'googleapis'
 import type { NextApiRequest, NextApiResponse } from 'next'
+import { withApiAuthRequired } from '@auth0/nextjs-auth0'
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+export default withApiAuthRequired(async function handler(req: NextApiRequest, res: NextApiResponse) {
   const target = ['https://www.googleapis.com/auth/spreadsheets.readonly']
   const jwt = new google.auth.JWT(
     process.env.GOOGLE_SHEETS_CLIENT_EMAIL,
@@ -51,4 +52,4 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     res.status(200).json(result)
   }
-}
+})

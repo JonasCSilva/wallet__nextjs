@@ -1,10 +1,10 @@
 import { withPageAuthRequired } from '@auth0/nextjs-auth0'
 import { Center, Heading, Spinner } from '@chakra-ui/react'
 import MyDashboard from '../components/MyDashboard'
-import useUserData from '../hooks/useUserData'
+import useUserFullData from '../hooks/useUserFullData'
 
 function Dashboard() {
-  const { isError } = useUserData()
+  const { isError } = useUserFullData()
 
   if (isError) {
     return (

@@ -4,7 +4,7 @@ import { useTable, useSortBy, Column } from 'react-table'
 import CurrentInput from './CurrentInput'
 import { bg3 } from '../theme'
 import { TickerData } from '../types/data'
-import useUserData from '../hooks/useUserData'
+import useUserFullData from '../hooks/useUserFullData'
 
 export type TableProps = {
   columns: Column<TickerData>[]
@@ -22,7 +22,7 @@ export type TableProps = {
 }
 
 export default function MyTable({ columns, data, sums }: TableProps) {
-  const { isLoading } = useUserData()
+  const { isLoading } = useUserFullData()
 
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable(
     {

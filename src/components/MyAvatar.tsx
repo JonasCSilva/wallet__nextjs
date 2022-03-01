@@ -13,11 +13,12 @@ import {
   Link,
   Skeleton
 } from '@chakra-ui/react'
-import useUserData from '../hooks/useUserData'
+import useUserFullData from '../hooks/useUserFullData'
+import NextLink from 'next/link'
 import { bg3, bgColor, buttonHoverColor } from '../theme'
 
 export default function MyAvatar() {
-  const { userFull, isLoading } = useUserData()
+  const { userFullData, isLoading } = useUserFullData()
   const { colorMode } = useColorMode()
 
   return (
@@ -28,7 +29,7 @@ export default function MyAvatar() {
             <Avatar size='md'>
               <Tooltip label='Configurar perfil' hasArrow openDelay={200}>
                 <Avatar
-                  name={userFull?.name}
+                  name={userFullData?.name}
                   bg={bg3}
                   color={bgColor[colorMode]}
                   _hover={{ bg: buttonHoverColor }}
@@ -53,11 +54,11 @@ export default function MyAvatar() {
             >
               Perfil
             </Button> */}
-            <Link href='/'>
+            <NextLink href='/' passHref>
               <Button colorScheme='green' mb={4} size='sm'>
                 Início
               </Button>
-            </Link>
+            </NextLink>
             <Link href='/api/auth/logout'>
               <Button colorScheme='red' mb={2} size='sm'>
                 Logout

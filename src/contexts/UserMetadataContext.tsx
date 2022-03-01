@@ -1,18 +1,13 @@
-import { createContext, Dispatch, ReactNode, SetStateAction, useEffect, useState } from 'react'
-import useUserData from '../hooks/useUserData'
+import { createContext, Dispatch, ReactNode, SetStateAction, useEffect, useMemo, useState } from 'react'
+import useUserFullData from '../hooks/useUserFullData'
 import { CurrentData, UserFull } from '../types/data'
 
-type UserMetadataContextData = {
-  userMetadata: UserFull['user_metadata']
-  setUserMetadata: Dispatch<SetStateAction<UserFull['user_metadata']>>
-}
+type UserMetadataContextData = [UserFull['user_metadata'], Dispatch<SetStateAction<UserFull['user_metadata']>>]
 
-const UserMetadataContext = createContext({} as UserMetadataContextData)
+export const UserMetadataContext = createContext({} as UserMetadataContextData)
 
-export default UserMetadataContext
-
-export function UserMetadataContextProvider({ children }: { children: ReactNode }) {
-  const { userFull } = useUserData()
+export default function UserMetadataContextProvider({ children }: { children: ReactNode }) {
+  const { userFullData } = useUserFullData()
 
   const [userMetadata, setUserMetadata] = useState<UserFull['user_metadata']>({
     contribution: 100,
@@ -21,12 +16,15 @@ export function UserMetadataContextProvider({ children }: { children: ReactNode 
   })
 
   useEffect(() => {
-    if (userFull) {
-      setUserMetadata(userFull.user_metadata)
+    if (userFullData) {
+      setUserMetadata(userFullData.user_metadata)
     }
-  }, [userFull])
+  }, [userFullData])
 
-  return (
-    <UserMetadataContext.Provider value={{ userMetadata, setUserMetadata }}>{children}</UserMetadataContext.Provider>
-  )
+  const userMetadataValue = useMemo(() => [userMetadata, setUserMetadata], [userMetadata]) as [
+    UserFull['user_metadata'],
+    Dispatch<SetStateAction<UserFull['user_metadata']>>
+  ]
+
+  return <UserMetadataContext.Provider value={userMetadataValue}>{children}</UserMetadataContext.Provider>
 }
