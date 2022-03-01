@@ -1,33 +1,58 @@
 import { Table, Thead, Tbody, Tr, Th, Td, Text, chakra, Skeleton, Tfoot } from '@chakra-ui/react'
 import { TriangleDownIcon, TriangleUpIcon } from '@chakra-ui/icons'
-import { useTable, useSortBy, Column } from 'react-table'
+import { useTable, useSortBy, Cell } from 'react-table'
 import CurrentInput from './CurrentInput'
 import { bg3 } from '../theme'
-import { TickerData } from '../types/data'
-import useUserFullData from '../hooks/useUserFullData'
+import { useEffect, useMemo, useRef, useState } from 'react'
+import headers from '../lib/headers'
+import { SumsData, TickerData } from '../types/data'
+import useSheetDataContext from '../hooks/useSheetDataContext'
 
-export type TableProps = {
-  columns: Column<TickerData>[]
-  data: TickerData[]
-  isLoadingSk: boolean
-  sums: {
-    objectiveSum: number
-    alocationSum: number
-    objectiveRSum: number
-    currentRSum: number
-    currentPSum: number
-    investRSum: number
-    investCSum: number
-  }
+const defaultSumsData = {
+  objectiveSum: 0,
+  alocationSum: 0,
+  objectiveRSum: 0,
+  currentRSum: 0,
+  currentPSum: 0,
+  investRSum: 0,
+  investCSum: 0
 }
 
-export default function MyTable({ columns, data, sums }: TableProps) {
-  const { isLoading } = useUserFullData()
+export default function MyTable({ index }: { index: number }) {
+  const [sheetDataState] = useSheetDataContext()
+
+  const [isLoading, setIsLoading] = useState(true)
+
+  const sums = useRef<SumsData>(defaultSumsData)
+
+  useEffect(() => {
+    if (sheetDataState[0][0].name !== 'DUMMY') {
+      const tickers = [...sheetDataState[index]]
+
+      for (const currentSum in sums.current) {
+        sums.current[currentSum as 'objectiveSum'] = 0
+      }
+      tickers.forEach(t => {
+        sums.current.alocationSum += t.alocation
+        sums.current.currentRSum += t.currentR
+        sums.current.currentPSum += t.currentP
+        sums.current.objectiveSum += t.objective
+        sums.current.objectiveRSum += t.objectiveR
+        sums.current.investRSum += t.investR
+        sums.current.investCSum += t.investC
+      })
+      setIsLoading(false)
+    }
+  }, [sheetDataState])
+
+  const columns = useMemo(() => headers, [])
+
+  const data = useMemo(() => sheetDataState[index], [sheetDataState[index]])
 
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable(
     {
       columns: columns,
-      data: data,
+      data,
       initialState: {
         sortBy: [
           {
@@ -108,7 +133,7 @@ export default function MyTable({ columns, data, sums }: TableProps) {
                   <Skeleton isLoaded={!isLoading}>
                     {(() => {
                       if (cell.column.id === 'current') {
-                        return <CurrentInput cell={cell} />
+                        return <CurrentInput cell={cell as Cell<TickerData>} />
                       } else if (typeof cell.value === 'number') {
                         return <Text pr={4}>{frmt(cell.value)}</Text>
                       } else {
@@ -124,53 +149,53 @@ export default function MyTable({ columns, data, sums }: TableProps) {
       </Tbody>
       <Tfoot>
         <Tr>
-          {rows[0].cells.map((item: any, index: number) => {
-            switch (index + 1) {
-              case 6:
+          {rows[0].cells.map((cell: any, index: number) => {
+            switch (cell.column.id) {
+              case 'objective':
                 return (
                   <Th key={index} {...footerStyle}>
                     <Skeleton isLoaded={!isLoading}>
-                      <Text {...footerTextStyle}>{frmt(sums.alocationSum)}</Text>
+                      <Text {...footerTextStyle}>{frmt(sums.current.objectiveSum)}</Text>
                     </Skeleton>
                   </Th>
                 )
-              case 7:
+              case 'objectiveR':
                 return (
                   <Th key={index} {...footerStyle}>
                     <Skeleton isLoaded={!isLoading}>
-                      <Text {...footerTextStyle}>{frmt(sums.objectiveRSum)}</Text>
+                      <Text {...footerTextStyle}>{frmt(sums.current.objectiveRSum)}</Text>
                     </Skeleton>
                   </Th>
                 )
-              case 9:
+              case 'currentR':
                 return (
                   <Th key={index} {...footerStyle}>
                     <Skeleton isLoaded={!isLoading}>
-                      <Text {...footerTextStyle}>{frmt(sums.currentRSum)}</Text>
+                      <Text {...footerTextStyle}>{frmt(sums.current.currentRSum)}</Text>
                     </Skeleton>
                   </Th>
                 )
-              case 10:
+              case 'currentP':
                 return (
                   <Th key={index} {...footerStyle}>
                     <Skeleton isLoaded={!isLoading}>
-                      <Text {...footerTextStyle}>{frmt(sums.currentPSum)}</Text>
+                      <Text {...footerTextStyle}>{frmt(sums.current.currentPSum)}</Text>
                     </Skeleton>
                   </Th>
                 )
-              case 11:
+              case 'investR':
                 return (
                   <Th key={index} {...footerStyle}>
                     <Skeleton isLoaded={!isLoading}>
-                      <Text {...footerTextStyle}>{frmt(sums.investRSum)}</Text>
+                      <Text {...footerTextStyle}>{frmt(sums.current.investRSum)}</Text>
                     </Skeleton>
                   </Th>
                 )
-              case 13:
+              case 'investC':
                 return (
                   <Th key={index} {...footerStyle}>
                     <Skeleton isLoaded={!isLoading}>
-                      <Text {...footerTextStyle}>{frmt(sums.investCSum)}</Text>
+                      <Text {...footerTextStyle}>{frmt(sums.current.investCSum)}</Text>
                     </Skeleton>
                   </Th>
                 )

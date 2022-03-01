@@ -17,8 +17,8 @@ export default function ContributionInput() {
   const { isLoading } = useUserData()
 
   useEffect(() => {
-    if (!isLoading) setValue(userContribution)
-  }, [isLoading])
+    if (userContribution !== value) setValue(userContribution)
+  }, [userContribution])
 
   return (
     <Skeleton isLoaded={!isLoading}>

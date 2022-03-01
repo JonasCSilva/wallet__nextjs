@@ -25,8 +25,8 @@ export default function BalanceSlider() {
   const handleChange = (value: number) => setValue(value)
 
   useEffect(() => {
-    if (!isLoading) setValue(userBalance)
-  }, [isLoading])
+    if (userBalance !== value) setValue(userBalance)
+  }, [userBalance])
 
   return (
     <Flex justify='center' align='center'>

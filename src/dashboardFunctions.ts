@@ -16,6 +16,7 @@ export function rounder(investR: number, price: number) {
 }
 
 export function getCurrent(name: string, currents: CurrentData[]): number {
+  if (!currents || !(currents.length > 0)) return 0
   for (let index = 0; index < currents.length; index++) {
     if (currents[index].name == name) {
       return currents[index].current
@@ -30,90 +31,68 @@ export function total(tickers: TickerData[]) {
   return sum
 }
 
-/* function UpdateData(
-    tickersD2: TickerData[],
-    tickersF2: TickerData[],
-    contribution2: number,
-    myCurrent: CurrentData[],
-    balance: number
-  ) {
-    const tickersD22 = [...tickersD2]
-    const tickersF22 = [...tickersF2]
-    for (const currentSum in sumsD.current) {
-      sumsD.current[currentSum as 'objectiveSum'] = 0
-    }
-    for (const currentSum in sumsF.current) {
-      sumsF.current[currentSum as 'objectiveSum'] = 0
-    }
-    mgcNmb1.current = 0
-    mgcNmb2.current = 0
-    tickersD22.forEach(t => {
-      t.current = getCurrent(t.name, myCurrent)
-      t.currentR = Number((t.price * t.current).toFixed(2))
-      sumsD.current.alocationSum += t.alocation
-      sumsD.current.currentRSum += t.currentR
-    })
-    tickersF22.forEach(t => {
-      t.current = getCurrent(t.name, myCurrent)
-      t.currentR = Number((t.price * t.current).toFixed(2))
-      sumsF.current.alocationSum += t.alocation
-      sumsF.current.currentRSum += t.currentR
-    })
-    const totalD = total(tickersD22)
-    const totalF = total(tickersF22)
-    const firstTotal = totalD + totalF
-    setMgcNmbs([...tickersD22], firstTotal, 1 - balance / 100)
-    setMgcNmbs([...tickersF22], firstTotal, balance / 100)
-    tickersD22.forEach(t => {
-      t.currentP = ((t.price * t.current) / (firstTotal + contribution2)) * 100
-      sumsD.current.currentPSum += t.currentP
-      t.objective = setObjectiveF(t, firstTotal + contribution2, 1 - balance / 100)
-      sumsD.current.objectiveSum += t.objective
-      t.objectiveR = (t.objective * (firstTotal + contribution2)) / 100
-      sumsD.current.objectiveRSum += t.objectiveR
-      t.investR = t.objectiveR - t.currentR
-      sumsD.current.investRSum += t.investR
-      t.invest = rounder(t.investR, t.price)
-      t.investC = t.invest * t.price
-      sumsD.current.investCSum += t.investC
-    })
-    tickersF22.forEach(t => {
-      t.currentP = ((t.price * t.current) / (firstTotal + contribution2)) * 100
-      sumsF.current.currentPSum += t.currentP
-      t.objective = setObjectiveF(t, firstTotal + contribution2, balance / 100)
-      sumsF.current.objectiveSum += t.objective
-      t.objectiveR = (t.objective * (firstTotal + contribution2)) / 100
-      sumsF.current.objectiveRSum += t.objectiveR
-      t.investR = t.objectiveR - t.currentR
-      sumsF.current.investRSum += t.investR
-      t.invest = rounder(t.investR, t.price)
-      t.investC = t.invest * t.price
-      sumsF.current.investCSum += t.investC
-    })
-    setTickers({ tickersD: tickersD22, tickersF: tickersF22 })
-  } */
+export function UpdateData(
+  sheetData: TickerData[][],
+  userBalance: number,
+  userContribution: number,
+  userCurrents: CurrentData[]
+) {
+  const tickersD = [...sheetData[0]]
+  const tickersF = [...sheetData[1]]
+  tickersD.forEach(t => {
+    t.current = getCurrent(t.name, userCurrents)
+    t.currentR = Number((t.price * t.current).toFixed(2))
+  })
+  tickersF.forEach(t => {
+    t.current = getCurrent(t.name, userCurrents)
+    t.currentR = Number((t.price * t.current).toFixed(2))
+  })
+  const totalD = total(tickersD)
+  const totalF = total(tickersF)
+  const firstTotal = totalD + totalF
+  const [mgcNmb11, mgcNmb12] = setMgcNmbs([...tickersD], firstTotal, 1 - userBalance / 100)
+  const [mgcNmb21, mgcNmb22] = setMgcNmbs([...tickersF], firstTotal, userBalance / 100, mgcNmb11, mgcNmb12)
+  tickersD.forEach(t => {
+    t.currentP = ((t.price * t.current) / (firstTotal + userContribution)) * 100
+    t.objective = setObjectiveF(t, firstTotal + userContribution, 1 - userBalance / 100, mgcNmb21, mgcNmb22)
+    t.objectiveR = (t.objective * (firstTotal + userContribution)) / 100
+    t.investR = t.objectiveR - t.currentR
+    t.invest = rounder(t.investR, t.price)
+    t.investC = t.invest * t.price
+  })
+  tickersF.forEach(t => {
+    t.currentP = ((t.price * t.current) / (firstTotal + userContribution)) * 100
+    t.objective = setObjectiveF(t, firstTotal + userContribution, userBalance / 100, mgcNmb21, mgcNmb22)
+    t.objectiveR = (t.objective * (firstTotal + userContribution)) / 100
+    t.investR = t.objectiveR - t.currentR
+    t.invest = rounder(t.investR, t.price)
+    t.investC = t.invest * t.price
+  })
+  return /* { tickers:  */ [tickersD, tickersF] /* , sums: [sumsD, sumsF] } */
+}
 
-/* function setMgcNmbs(t: TickerData[], firstTotal: number, balance2: number) {
-    t.forEach(t => {
-      if (t.alocation === 0) {
-      } else if (t.price < t.priceCap) {
-        mgcNmb2.current += t.alocation * balance2
-      } else if (t.price >= t.priceCap) {
-        if (firstTotal > 1) {
-          mgcNmb1.current += ((t.price * t.current) / firstTotal) * 100
-        } else {
-          mgcNmb1.current += 0
-        }
+function setMgcNmbs(t: TickerData[], firstTotal: number, balance2: number, mgcNmb1 = 0, mgcNmb2 = 0) {
+  t.forEach(t => {
+    if (t.alocation === 0) {
+    } else if (t.price < t.priceCap) {
+      mgcNmb2 += t.alocation * balance2
+    } else if (t.price >= t.priceCap) {
+      if (firstTotal > 1) {
+        mgcNmb1 += ((t.price * t.current) / firstTotal) * 100
       } else {
-        console.log('error')
+        mgcNmb1 += 0
       }
-    })
-  } */
-
-/* function setObjectiveF(t: TickerData, total: number, balance2: number): number {
-    if (t.price < t.priceCap) {
-      return (t.alocation * balance2 * (100 - mgcNmb1.current)) / mgcNmb2.current
     } else {
-      return ((t.price * t.current) / total) * 100
+      console.log('error')
     }
-  } */
+  })
+  return [mgcNmb1, mgcNmb2]
+}
+
+function setObjectiveF(t: TickerData, total: number, balance2: number, mgcNmb1: number, mgcNmb2: number): number {
+  if (t.price < t.priceCap) {
+    return (t.alocation * balance2 * (100 - mgcNmb1)) / mgcNmb2
+  } else {
+    return ((t.price * t.current) / total) * 100
+  }
+}

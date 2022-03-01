@@ -5,6 +5,7 @@ import useUserFullData from '../hooks/useUserFullData'
 import UserContributionContextProvider from '../contexts/UserContributionContext'
 import UserBalanceContextProvider from '../contexts/UserBalanceContext'
 import UserCurrentsContextProvider from '../contexts/UserCurrentsContext'
+import SheetContextProvider from '../contexts/SheetDataContext'
 
 function Dashboard() {
   const { isError } = useUserFullData()
@@ -21,7 +22,9 @@ function Dashboard() {
     <UserContributionContextProvider>
       <UserBalanceContextProvider>
         <UserCurrentsContextProvider>
-          <MyDashboard />
+          <SheetContextProvider>
+            <MyDashboard />
+          </SheetContextProvider>
         </UserCurrentsContextProvider>
       </UserBalanceContextProvider>
     </UserContributionContextProvider>
