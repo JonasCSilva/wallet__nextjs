@@ -4,7 +4,7 @@ import useSWRImmutable from 'swr'
 import axios from 'axios'
 import dummyData from '../lib/dummyData'
 import { UpdateData } from '../dashboardFunctions'
-import useUserBalanceContext from '../hooks/useUserbalanceContext'
+import useUserBalanceContext from '../hooks/useUserBalanceContext'
 import useUserContributionContext from '../hooks/useUserContributionContext'
 import useUserCurrentsContext from '../hooks/useUserCurrentsContext'
 

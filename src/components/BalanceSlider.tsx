@@ -14,7 +14,7 @@ import {
 } from '@chakra-ui/react'
 import axios from 'axios'
 import { useState, useEffect } from 'react'
-import useUserBalanceContext from '../hooks/useUserbalanceContext'
+import useUserBalanceContext from '../hooks/useUserBalanceContext'
 import useUserFullData from '../hooks/useUserFullData'
 
 export default function BalanceSlider() {
