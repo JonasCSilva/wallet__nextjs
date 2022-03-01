@@ -1,4 +1,4 @@
-import { Heading, useColorMode, Center, Spinner, Flex, HStack, Button } from '@chakra-ui/react'
+import { Heading, useColorMode, Center, Flex, Button, Skeleton } from '@chakra-ui/react'
 import type { NextPage } from 'next'
 import { bg3, bgColor, buttonHoverColor, hoverGray, topBg } from '../theme'
 import { Link } from '@chakra-ui/react'
@@ -11,13 +11,6 @@ import NextLink from 'next/link'
 const Home: NextPage = () => {
   const { colorMode } = useColorMode()
   const { user, error, isLoading } = useUser()
-
-  if (isLoading)
-    return (
-      <Center height='100vh'>
-        <Spinner size='xl' />
-      </Center>
-    )
 
   if (error)
     return (
@@ -40,30 +33,32 @@ const Home: NextPage = () => {
       >
         <Heading size='4xl'>Wallet</Heading>
         <ChangeThemeButton />
-        <HStack justify='space-between'>
-          {user ? (
-            <NextLink href='/dashboard' passHref>
-              <Button
-                colorScheme='green'
-                borderColor={colorMode === 'light' ? 'black' : 'white'}
-                color={colorMode === 'light' ? 'black' : 'white'}
-                _hover={{ bg: hoverGray[colorMode] }}
-                size='lg'
-                variant='outline'
-                border='2px'
-                fontSize={26}
-              >
-                Acessar conta
-              </Button>
-            </NextLink>
-          ) : (
-            <Link href='/api/auth/login?returnTo=/dashboard'>
-              <Button bg={bg3} color={bgColor[colorMode]} _hover={{ bg: buttonHoverColor }} size='lg' fontSize={26}>
-                Login
-              </Button>
-            </Link>
-          )}
-        </HStack>
+        <Skeleton isLoaded={!isLoading}>
+          <Flex justify='space-between'>
+            {!isLoading && user ? (
+              <NextLink href='/dashboard' passHref>
+                <Button
+                  colorScheme='green'
+                  borderColor={colorMode === 'light' ? 'black' : 'white'}
+                  color={colorMode === 'light' ? 'black' : 'white'}
+                  _hover={{ bg: hoverGray[colorMode] }}
+                  size='lg'
+                  variant='outline'
+                  border='2px'
+                  fontSize={26}
+                >
+                  Acessar conta
+                </Button>
+              </NextLink>
+            ) : (
+              <Link href='/api/auth/login?returnTo=/dashboard'>
+                <Button bg={bg3} color={bgColor[colorMode]} _hover={{ bg: buttonHoverColor }} size='lg' fontSize={26}>
+                  Login
+                </Button>
+              </Link>
+            )}
+          </Flex>
+        </Skeleton>
       </Flex>
       <Flex flex='1' align='center' justify='center' width='80%'>
         <Flex direction='column' align='center' justify='center' w={'50%'}>
