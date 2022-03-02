@@ -55,7 +55,6 @@ export default withApiAuthRequired(async function handler(req: NextApiRequest, r
       res.status(200).json(result)
     }
   } catch (error) {
-    console.error(error)
-    res.status(200).json([dummyData, dummyData])
+    res.status(500).json(error)
   }
 })
