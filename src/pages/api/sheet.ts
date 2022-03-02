@@ -9,7 +9,7 @@ export default withApiAuthRequired(async function handler(req: NextApiRequest, r
     const jwt = new google.auth.JWT(
       process.env.GOOGLE_SHEETS_CLIENT_EMAIL,
       undefined,
-      (process.env.GOOGLE_SHEETS_PRIVATE_KEY || '').replace(/\\n/g, '\n'),
+      process.env.GOOGLE_SHEETS_PRIVATE_KEY as string,
       target
     )
 
