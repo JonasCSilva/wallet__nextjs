@@ -2,7 +2,6 @@ import { TickerData } from '../../types/data'
 import { google } from 'googleapis'
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { withApiAuthRequired } from '@auth0/nextjs-auth0'
-import dummyData from '../../lib/dummyData'
 
 export default withApiAuthRequired(async function handler(req: NextApiRequest, res: NextApiResponse) {
   try {
@@ -10,7 +9,7 @@ export default withApiAuthRequired(async function handler(req: NextApiRequest, r
     const jwt = new google.auth.JWT(
       process.env.GOOGLE_SHEETS_CLIENT_EMAIL,
       undefined,
-      process.env.GOOGLE_SHEETS_PRIVATE_KEY as string,
+      (process.env.GOOGLE_SHEETS_PRIVATE_KEY || '').replace(/\\n/g, '\n'),
       target
     )
 
