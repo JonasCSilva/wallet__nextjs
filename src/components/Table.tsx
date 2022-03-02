@@ -3,55 +3,33 @@ import { TriangleDownIcon, TriangleUpIcon } from '@chakra-ui/icons'
 import { useTable, useSortBy, Cell } from 'react-table'
 import CurrentInput from './CurrentInput'
 import { bg3 } from '../theme'
-import { useEffect, useMemo, useRef, useState } from 'react'
-import headers from '../lib/headers'
-import { SumsData, TickerData } from '../types/data'
+import { useEffect, useMemo, useState } from 'react'
+import { TickerData } from '../types/data'
 import useSheetDataContext from '../hooks/useSheetDataContext'
-
-const defaultSumsData = {
-  objectiveSum: 0,
-  alocationSum: 0,
-  objectiveRSum: 0,
-  currentRSum: 0,
-  currentPSum: 0,
-  investRSum: 0,
-  investCSum: 0
-}
+import { headersAndFooters } from '../headerAndFooters'
 
 export default function MyTable({ index }: { index: number }) {
   const [sheetDataState] = useSheetDataContext()
 
   const [isLoading, setIsLoading] = useState(true)
 
-  const sums = useRef<SumsData>(defaultSumsData)
-
   useEffect(() => {
-    if (sheetDataState[0][0].name !== 'DUMMY') {
-      const tickers = [...sheetDataState[index]]
-
-      for (const currentSum in sums.current) {
-        sums.current[currentSum as 'objectiveSum'] = 0
-      }
-      tickers.forEach(t => {
-        sums.current.alocationSum += t.alocation
-        sums.current.currentRSum += t.currentR
-        sums.current.currentPSum += t.currentP
-        sums.current.objectiveSum += t.objective
-        sums.current.objectiveRSum += t.objectiveR
-        sums.current.investRSum += t.investR
-        sums.current.investCSum += t.investC
-      })
+    if (sheetDataState[0][0].name !== 'DUMMY' && isLoading) {
       setIsLoading(false)
     }
   }, [sheetDataState])
 
-  const columns = useMemo(() => headers, [])
+  function frmt(value: number) {
+    return Number(value.toFixed(2))
+  }
+
+  const columns = useMemo(() => headersAndFooters, [])
 
   const data = useMemo(() => sheetDataState[index], [sheetDataState[index]])
 
-  const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable(
+  const { getTableProps, getTableBodyProps, headerGroups, footerGroups, rows, prepareRow } = useTable(
     {
-      columns: columns,
+      columns,
       data,
       initialState: {
         sortBy: [
@@ -66,10 +44,6 @@ export default function MyTable({ index }: { index: number }) {
     },
     useSortBy
   )
-
-  function frmt(value: number) {
-    return Number(value.toFixed(2))
-  }
 
   const footerStyle = {
     fontSize: 12,
@@ -92,10 +66,10 @@ export default function MyTable({ index }: { index: number }) {
       borderTopWidth={0}
     >
       <Thead>
-        {headerGroups.map(headerGroup => (
+        {headerGroups.map(group => (
           // eslint-disable-next-line react/jsx-key
-          <Tr {...headerGroup.getHeaderGroupProps()}>
-            {headerGroup.headers.map(column => (
+          <Tr {...group.getHeaderGroupProps()}>
+            {group.headers.map(column => (
               // eslint-disable-next-line react/jsx-key
               <Th {...column.getHeaderProps(column.getSortByToggleProps())} fontSize={10} py={4} textAlign='center'>
                 {column.render('Header')}
@@ -107,6 +81,7 @@ export default function MyTable({ index }: { index: number }) {
                       <TriangleUpIcon aria-label='sorted ascending' />
                     )
                   ) : (
+                    // TODO: Change
                     <TriangleUpIcon aria-label='hidden' color='transparent' />
                   )}
                 </chakra.span>
@@ -148,62 +123,21 @@ export default function MyTable({ index }: { index: number }) {
         })}
       </Tbody>
       <Tfoot>
-        <Tr>
-          {rows[0].cells.map((cell: any, index: number) => {
-            switch (cell.column.id) {
-              case 'objective':
-                return (
-                  <Th key={index} {...footerStyle}>
-                    <Skeleton isLoaded={!isLoading}>
-                      <Text {...footerTextStyle}>{frmt(sums.current.objectiveSum)}</Text>
-                    </Skeleton>
-                  </Th>
-                )
-              case 'objectiveR':
-                return (
-                  <Th key={index} {...footerStyle}>
-                    <Skeleton isLoaded={!isLoading}>
-                      <Text {...footerTextStyle}>{frmt(sums.current.objectiveRSum)}</Text>
-                    </Skeleton>
-                  </Th>
-                )
-              case 'currentR':
-                return (
-                  <Th key={index} {...footerStyle}>
-                    <Skeleton isLoaded={!isLoading}>
-                      <Text {...footerTextStyle}>{frmt(sums.current.currentRSum)}</Text>
-                    </Skeleton>
-                  </Th>
-                )
-              case 'currentP':
-                return (
-                  <Th key={index} {...footerStyle}>
-                    <Skeleton isLoaded={!isLoading}>
-                      <Text {...footerTextStyle}>{frmt(sums.current.currentPSum)}</Text>
-                    </Skeleton>
-                  </Th>
-                )
-              case 'investR':
-                return (
-                  <Th key={index} {...footerStyle}>
-                    <Skeleton isLoaded={!isLoading}>
-                      <Text {...footerTextStyle}>{frmt(sums.current.investRSum)}</Text>
-                    </Skeleton>
-                  </Th>
-                )
-              case 'investC':
-                return (
-                  <Th key={index} {...footerStyle}>
-                    <Skeleton isLoaded={!isLoading}>
-                      <Text {...footerTextStyle}>{frmt(sums.current.investCSum)}</Text>
-                    </Skeleton>
-                  </Th>
-                )
-              default:
-                return <Th key={index} {...footerStyle} />
-            }
-          })}
-        </Tr>
+        {footerGroups.map(group => (
+          // eslint-disable-next-line react/jsx-key
+          <Tr {...group.getFooterGroupProps()}>
+            {group.headers.map(column => (
+              // eslint-disable-next-line react/jsx-key
+              <Th {...column.getFooterProps()} {...footerStyle}>
+                {column.Footer ? (
+                  <Skeleton isLoaded={!isLoading}>
+                    <Text {...footerTextStyle}>{column.render('Footer')}</Text>
+                  </Skeleton>
+                ) : null}
+              </Th>
+            ))}
+          </Tr>
+        ))}
       </Tfoot>
     </Table>
   )

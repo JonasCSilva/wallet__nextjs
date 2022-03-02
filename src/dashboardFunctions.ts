@@ -68,7 +68,7 @@ export function UpdateData(
     t.invest = rounder(t.investR, t.price)
     t.investC = t.invest * t.price
   })
-  return /* { tickers:  */ [tickersD, tickersF] /* , sums: [sumsD, sumsF] } */
+  return [tickersD, tickersF]
 }
 
 function setMgcNmbs(t: TickerData[], firstTotal: number, balance2: number, mgcNmb1 = 0, mgcNmb2 = 0) {

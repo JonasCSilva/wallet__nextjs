@@ -16,8 +16,8 @@ export const SheetDataContext = createContext({} as SheetContextData)
 
 export default function SheetContextProvider({ children }: { children: ReactNode }) {
   const { data: sheetData, error } = useSWRImmutable(() => `/api/sheet`, fetcher)
-  const [userBalance] = useUserBalanceContext()
 
+  const [userBalance] = useUserBalanceContext()
   const [userContribution] = useUserContributionContext()
   const [userCurrents] = useUserCurrentsContext()
 
