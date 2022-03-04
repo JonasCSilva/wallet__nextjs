@@ -27,13 +27,3 @@ export type CurrentData = {
   name: string
   current: number
 }
-
-export type SumsData = {
-  objectiveSum: number
-  alocationSum: number
-  objectiveRSum: number
-  currentRSum: number
-  currentPSum: number
-  investRSum: number
-  investCSum: number
-}

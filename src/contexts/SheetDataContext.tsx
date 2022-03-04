@@ -2,7 +2,7 @@ import { createContext, Dispatch, ReactNode, SetStateAction, useEffect, useMemo,
 import { TickerData } from '../types/data'
 import useSWRImmutable from 'swr'
 import axios from 'axios'
-import dummyData from '../lib/dummyData'
+import dummyData from '../dummyData'
 import { UpdateData } from '../dashboardFunctions'
 import useUserBalanceContext from '../hooks/useUserBalanceContext'
 import useUserContributionContext from '../hooks/useUserContributionContext'

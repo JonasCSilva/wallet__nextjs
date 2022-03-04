@@ -50,6 +50,7 @@ export function UpdateData(
   const totalD = total(tickersD)
   const totalF = total(tickersF)
   const firstTotal = totalD + totalF
+  console.log(firstTotal)
   const [mgcNmb11, mgcNmb12] = setMgcNmbs([...tickersD], firstTotal, 1 - userBalance / 100)
   const [mgcNmb21, mgcNmb22] = setMgcNmbs([...tickersF], firstTotal, userBalance / 100, mgcNmb11, mgcNmb12)
   tickersD.forEach(t => {

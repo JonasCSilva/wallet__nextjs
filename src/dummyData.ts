@@ -1,4 +1,4 @@
-import { TickerData } from '../types/data'
+import { TickerData } from './types/data'
 
 const dummyData: TickerData[] = []
 

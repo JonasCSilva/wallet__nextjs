@@ -1,4 +1,4 @@
-import { Flex, Tab, Tabs, TabList, TabPanels, TabPanel, useColorMode } from '@chakra-ui/react'
+import { Tab, Tabs, TabList, TabPanels, TabPanel, useColorMode, VStack } from '@chakra-ui/react'
 import MyHeader from './MyHeader'
 import { bg3, bgColor } from '../theme'
 import MyTable from './Table'
@@ -17,7 +17,7 @@ export default function MyDashboard() {
   }
 
   return (
-    <Flex justify='center' align='center' direction='column'>
+    <VStack>
       <MyHeader />
       <Tabs isFitted variant='enclosed' width='90%' my={10} isLazy>
         <TabList>
@@ -33,6 +33,6 @@ export default function MyDashboard() {
           </TabPanel>
         </TabPanels>
       </Tabs>
-    </Flex>
+    </VStack>
   )
 }
