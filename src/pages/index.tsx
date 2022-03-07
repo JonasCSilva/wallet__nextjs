@@ -1,12 +1,12 @@
-import { Heading, useColorMode, Center, Flex, Button, Skeleton } from '@chakra-ui/react'
-import type { NextPage } from 'next'
-import { bg3, bgColor, buttonHoverColor, hoverGray, topBg } from '../theme'
-import { Link } from '@chakra-ui/react'
 import { useUser } from '@auth0/nextjs-auth0'
-import ChangeThemeButton from '../components/ChangeThemeButton'
-import WalletIcon from '../../public/wallet.svg'
+import { Heading, useColorMode, Center, Flex, Button, Skeleton, Link } from '@chakra-ui/react'
+import type { NextPage } from 'next'
 import Image from 'next/image'
 import NextLink from 'next/link'
+
+import WalletIcon from '../../public/wallet.svg'
+import ChangeThemeButton from '../components/ChangeThemeButton'
+import { bg3, bgColor, buttonHoverColor, hoverGray, topBg } from '../theme'
 
 const Home: NextPage = () => {
   const { colorMode } = useColorMode()
@@ -24,9 +24,9 @@ const Home: NextPage = () => {
       <Flex
         align='center'
         bg={topBg[colorMode]}
-        w={'80%'}
+        w='80%'
         justify='space-between'
-        borderRadius={'md'}
+        borderRadius='md'
         mt={10}
         py={4}
         px={32}
@@ -61,12 +61,12 @@ const Home: NextPage = () => {
         </Skeleton>
       </Flex>
       <Flex flex='1' align='center' justify='center' width='80%'>
-        <Flex direction='column' align='center' justify='center' w={'50%'}>
+        <Flex direction='column' align='center' justify='center' w='50%'>
           <Heading size='4xl' textAlign='center'>
             Dê adeus às planilhas de investimento
           </Heading>
         </Flex>
-        <Flex align='center' justify='center' w={'50%'}>
+        <Flex align='center' justify='center' w='50%'>
           <Image priority src={WalletIcon} alt='Wallet Icon' width={350} height={350} />
         </Flex>
       </Flex>

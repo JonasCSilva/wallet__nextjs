@@ -14,6 +14,7 @@ import {
 } from '@chakra-ui/react'
 import axios from 'axios'
 import { useState, useEffect } from 'react'
+
 import useUserBalanceContext from '../hooks/useUserBalanceContext'
 import useUserFullData from '../hooks/useUserFullData'
 
@@ -33,7 +34,7 @@ export default function BalanceSlider() {
       <Skeleton isLoaded={!isLoading}>
         <NumberInput
           w={20}
-          inputMode={'numeric'}
+          inputMode='numeric'
           value={value}
           onChange={value => handleChange(Number(value))}
           onBlur={e => {
@@ -49,7 +50,7 @@ export default function BalanceSlider() {
           </NumberInputStepper>
         </NumberInput>
       </Skeleton>
-      <Heading size='lg' fontWeight={'500'} mx={3}>
+      <Heading size='lg' fontWeight='500' mx={3}>
         Div
       </Heading>
       <Skeleton isLoaded={!isLoading}>
@@ -68,14 +69,14 @@ export default function BalanceSlider() {
             focusThumbOnChange={false}
             value={value}
           >
-            <SliderTrack borderRadius={'6px'}>
+            <SliderTrack borderRadius='6px'>
               <SliderFilledTrack bg='transparent' />
             </SliderTrack>
             <SliderThumb />
           </Slider>
         </Flex>
       </Skeleton>
-      <Heading size='xl' fontWeight={'500'} ml={3}>
+      <Heading size='xl' fontWeight='500' ml={3}>
         FIIs
       </Heading>
     </Flex>

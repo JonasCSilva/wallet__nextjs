@@ -1,8 +1,9 @@
-import useSWRImmutable from 'swr'
-import axios from 'axios'
-import { UserFull } from '../types/data'
 import { useUser } from '@auth0/nextjs-auth0'
+import axios from 'axios'
 import { useMemo } from 'react'
+import useSWRImmutable from 'swr'
+
+import { UserFull } from '../types/data'
 
 const fetcher = (url: string) => axios.get(url).then((res: { data: UserFull }) => res.data)
 

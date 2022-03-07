@@ -1,11 +1,12 @@
 import { withPageAuthRequired } from '@auth0/nextjs-auth0'
 import { Center, Heading, Spinner } from '@chakra-ui/react'
+
 import MyDashboard from '../components/MyDashboard'
-import useUserFullData from '../hooks/useUserFullData'
-import UserContributionContextProvider from '../contexts/UserContributionContext'
-import UserBalanceContextProvider from '../contexts/UserBalanceContext'
-import UserCurrentsContextProvider from '../contexts/UserCurrentsContext'
 import SheetContextProvider from '../contexts/SheetDataContext'
+import UserBalanceContextProvider from '../contexts/UserBalanceContext'
+import UserContributionContextProvider from '../contexts/UserContributionContext'
+import UserCurrentsContextProvider from '../contexts/UserCurrentsContext'
+import useUserFullData from '../hooks/useUserFullData'
 
 function Dashboard() {
   const { isError } = useUserFullData()

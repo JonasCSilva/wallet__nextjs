@@ -1,12 +1,13 @@
-import { Table, Thead, Tbody, Tr, Th, Td, Text, chakra, Skeleton, Tfoot } from '@chakra-ui/react'
 import { TriangleDownIcon, TriangleUpIcon } from '@chakra-ui/icons'
-import { useTable, useSortBy, Cell } from 'react-table'
-import CurrentInput from './CurrentInput'
-import { bg3 } from '../theme'
+import { Table, Thead, Tbody, Tr, Th, Td, Text, chakra, Skeleton, Tfoot } from '@chakra-ui/react'
 import { useEffect, useMemo, useState } from 'react'
-import { TickerData } from '../types/data'
-import useSheetDataContext from '../hooks/useSheetDataContext'
+import { useTable, useSortBy, Cell } from 'react-table'
+
 import { headersAndFooters } from '../headerAndFooters'
+import useSheetDataContext from '../hooks/useSheetDataContext'
+import { bg3 } from '../theme'
+import { TickerData } from '../types/data'
+import CurrentInput from './CurrentInput'
 
 export default function MyTable({ index }: { index: number }) {
   const [sheetDataState] = useSheetDataContext()
@@ -60,9 +61,9 @@ export default function MyTable({ index }: { index: number }) {
     <Table
       {...getTableProps()}
       size='sm'
-      border={'solid'}
+      border='solid'
       borderWidth={1}
-      borderColor={'rgba(255, 255, 255, 0.16)'}
+      borderColor='rgba(255, 255, 255, 0.16)'
       borderTopWidth={0}
     >
       <Thead>

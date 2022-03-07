@@ -1,12 +1,13 @@
-import { createContext, Dispatch, ReactNode, SetStateAction, useEffect, useMemo, useState } from 'react'
-import { TickerData } from '../types/data'
-import useSWRImmutable from 'swr'
 import axios from 'axios'
-import dummyData from '../dummyData'
+import { createContext, Dispatch, ReactNode, SetStateAction, useEffect, useMemo, useState } from 'react'
+import useSWRImmutable from 'swr'
+
 import { UpdateData } from '../dashboardFunctions'
+import dummyData from '../dummyData'
 import useUserBalanceContext from '../hooks/useUserBalanceContext'
 import useUserContributionContext from '../hooks/useUserContributionContext'
 import useUserCurrentsContext from '../hooks/useUserCurrentsContext'
+import { TickerData } from '../types/data'
 
 type SheetContextData = [TickerData[][], Dispatch<SetStateAction<TickerData[][]>>]
 

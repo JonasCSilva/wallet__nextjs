@@ -1,4 +1,5 @@
 import { Skeleton, Text } from '@chakra-ui/react'
+
 import useUserFullData from '../hooks/useUserFullData'
 
 export default function TotalText() {

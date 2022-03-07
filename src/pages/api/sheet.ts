@@ -1,7 +1,8 @@
-import { TickerData } from '../../types/data'
+import { withApiAuthRequired } from '@auth0/nextjs-auth0'
 import { google } from 'googleapis'
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { withApiAuthRequired } from '@auth0/nextjs-auth0'
+
+import { TickerData } from '../../types/data'
 
 export default withApiAuthRequired(async function handler(req: NextApiRequest, res: NextApiResponse) {
   const { method } = req

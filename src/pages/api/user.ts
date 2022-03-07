@@ -1,5 +1,6 @@
 import { getSession, withApiAuthRequired } from '@auth0/nextjs-auth0'
 import { NextApiRequest, NextApiResponse } from 'next'
+
 import { auth0Management } from '../../auth0'
 
 const defaultMetadata = { balance: 50, contribution: 100, currents: [] }
@@ -33,17 +34,19 @@ export default withApiAuthRequired(async function handler(req: NextApiRequest, r
       }
       break
     case 'PATCH':
-      const newMetadata = req.body.data
+      ;(async () => {
+        const newMetadata = req.body.data
 
-      try {
-        await auth0Management.updateUserMetadata({ id: userId }, { ...newMetadata })
+        try {
+          await auth0Management.updateUserMetadata({ id: userId }, { ...newMetadata })
 
-        res.status(200).json({
-          newMetadata
-        })
-      } catch (error) {
-        res.status(500).json(error)
-      }
+          res.status(200).json({
+            newMetadata
+          })
+        } catch (error) {
+          res.status(500).json(error)
+        }
+      })()
       break
     default:
       res.setHeader('Allow', ['GET', 'PATCH'])

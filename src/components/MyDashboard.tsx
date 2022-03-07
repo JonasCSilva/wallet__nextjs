@@ -1,6 +1,7 @@
 import { Tab, Tabs, TabList, TabPanels, TabPanel, useColorMode, VStack } from '@chakra-ui/react'
-import MyHeader from './MyHeader'
+
 import { bg3, bgColor } from '../theme'
+import MyHeader from './MyHeader'
 import MyTable from './Table'
 
 export default function MyDashboard() {

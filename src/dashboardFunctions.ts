@@ -18,7 +18,7 @@ export function rounder(investR: number, price: number) {
 export function getCurrent(name: string, currents: CurrentData[]): number {
   if (!currents || !(currents.length > 0)) return 0
   for (let index = 0; index < currents.length; index++) {
-    if (currents[index].name == name) {
+    if (currents[index].name === name) {
       return currents[index].current
     }
   }

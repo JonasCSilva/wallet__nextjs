@@ -8,8 +8,9 @@ import {
 } from '@chakra-ui/react'
 import axios from 'axios'
 import { useEffect, useState } from 'react'
-import useUserData from '../hooks/useUserFullData'
+
 import useUserContributionContext from '../hooks/useUserContributionContext'
+import useUserData from '../hooks/useUserFullData'
 
 export default function ContributionInput() {
   const [userContribution, setUserContribution] = useUserContributionContext()
@@ -32,7 +33,11 @@ export default function ContributionInput() {
             setValue(newValue)
           } else if (newValue.search(/\D/) && Number(newValue) <= 9999) {
             const contribution = Number(newValue)
-            contribution <= 0 ? setValue('') : setValue(contribution)
+            if (contribution <= 0) {
+              setValue('')
+            } else {
+              setValue(contribution)
+            }
           }
         }}
         onBlur={e => {

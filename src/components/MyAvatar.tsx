@@ -13,8 +13,9 @@ import {
   Link,
   Skeleton
 } from '@chakra-ui/react'
-import useUserFullData from '../hooks/useUserFullData'
 import NextLink from 'next/link'
+
+import useUserFullData from '../hooks/useUserFullData'
 import { bg3, bgColor, buttonHoverColor } from '../theme'
 
 export default function MyAvatar() {

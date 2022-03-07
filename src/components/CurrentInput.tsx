@@ -8,6 +8,7 @@ import {
 import axios from 'axios'
 import { useEffect, useState } from 'react'
 import { Cell } from 'react-table'
+
 import { getCurrent } from '../dashboardFunctions'
 import useUserCurrentsContext from '../hooks/useUserCurrentsContext'
 import { TickerData } from '../types/data'
