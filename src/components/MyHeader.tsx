@@ -11,7 +11,7 @@ export default function MyHeader() {
   const { colorMode } = useColorMode()
 
   return (
-    <Flex justify='space-around' align='center' borderRadius='6px' w='90%' mt={4} bg={topBg[colorMode]}>
+    <Flex justify='space-around' align='center' borderRadius='6px' w='90%' mb={4} bg={topBg[colorMode]}>
       <MyAvatar />
 
       <ChangeThemeButton />
@@ -34,7 +34,7 @@ export default function MyHeader() {
       </Flex>
       <HStack>
         <Heading size='lg' fontWeight='500' display='flex' alignItems='center' justifyContent='center'>
-          Total: R$
+          Total:
         </Heading>
         <TotalText />
       </HStack>

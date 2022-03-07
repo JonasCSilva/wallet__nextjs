@@ -13,7 +13,7 @@ export default withApiAuthRequired(async function handler(req: NextApiRequest, r
   const userId = session?.user.sub
 
   switch (method) {
-    case 'GET':
+    case 'GET': {
       try {
         const user = await auth0Management.getUser({ id: userId })
 
@@ -33,21 +33,21 @@ export default withApiAuthRequired(async function handler(req: NextApiRequest, r
         res.status(500).json(error)
       }
       break
-    case 'PATCH':
-      ;(async () => {
-        const newMetadata = req.body.data
+    }
+    case 'PATCH': {
+      const newMetadata = req.body.data
 
-        try {
-          await auth0Management.updateUserMetadata({ id: userId }, { ...newMetadata })
+      try {
+        await auth0Management.updateUserMetadata({ id: userId }, { ...newMetadata })
 
-          res.status(200).json({
-            newMetadata
-          })
-        } catch (error) {
-          res.status(500).json(error)
-        }
-      })()
+        res.status(200).json({
+          newMetadata
+        })
+      } catch (error) {
+        res.status(500).json(error)
+      }
       break
+    }
     default:
       res.setHeader('Allow', ['GET', 'PATCH'])
       res.status(405).end(`Method ${method} Not Allowed`)

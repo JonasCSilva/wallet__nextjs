@@ -24,7 +24,7 @@ export default withApiAuthRequired(async function handler(req: NextApiRequest, r
   }
 
   switch (method) {
-    case 'GET':
+    case 'GET': {
       try {
         if (!sheets) {
           res.status(500).json({ error: 'Google Sheets API is undefined' })
@@ -73,6 +73,7 @@ export default withApiAuthRequired(async function handler(req: NextApiRequest, r
         res.status(500).json(error)
       }
       break
+    }
     default:
       res.setHeader('Allow', ['GET'])
       res.status(405).end(`Method ${method} Not Allowed`)

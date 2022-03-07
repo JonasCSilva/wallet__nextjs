@@ -49,22 +49,21 @@ export function UpdateData(
   })
   const totalD = total(tickersD)
   const totalF = total(tickersF)
-  const firstTotal = totalD + totalF
-  console.log(firstTotal)
-  const [mgcNmb11, mgcNmb12] = setMgcNmbs([...tickersD], firstTotal, 1 - userBalance / 100)
-  const [mgcNmb21, mgcNmb22] = setMgcNmbs([...tickersF], firstTotal, userBalance / 100, mgcNmb11, mgcNmb12)
+  const totalCurrent = totalD + totalF
+  const [mgcNmb11, mgcNmb12] = setMgcNmbs([...tickersD], totalCurrent, 1 - userBalance / 100)
+  const [mgcNmb21, mgcNmb22] = setMgcNmbs([...tickersF], totalCurrent, userBalance / 100, mgcNmb11, mgcNmb12)
   tickersD.forEach(t => {
-    t.currentP = ((t.price * t.current) / (firstTotal + userContribution)) * 100
-    t.objective = setObjectiveF(t, firstTotal + userContribution, 1 - userBalance / 100, mgcNmb21, mgcNmb22)
-    t.objectiveR = (t.objective * (firstTotal + userContribution)) / 100
+    t.currentP = ((t.price * t.current) / (totalCurrent + userContribution)) * 100
+    t.objective = setObjectiveF(t, totalCurrent + userContribution, 1 - userBalance / 100, mgcNmb21, mgcNmb22)
+    t.objectiveR = (t.objective * (totalCurrent + userContribution)) / 100
     t.investR = t.objectiveR - t.currentR
     t.invest = rounder(t.investR, t.price)
     t.investC = t.invest * t.price
   })
   tickersF.forEach(t => {
-    t.currentP = ((t.price * t.current) / (firstTotal + userContribution)) * 100
-    t.objective = setObjectiveF(t, firstTotal + userContribution, userBalance / 100, mgcNmb21, mgcNmb22)
-    t.objectiveR = (t.objective * (firstTotal + userContribution)) / 100
+    t.currentP = ((t.price * t.current) / (totalCurrent + userContribution)) * 100
+    t.objective = setObjectiveF(t, totalCurrent + userContribution, userBalance / 100, mgcNmb21, mgcNmb22)
+    t.objectiveR = (t.objective * (totalCurrent + userContribution)) / 100
     t.investR = t.objectiveR - t.currentR
     t.invest = rounder(t.investR, t.price)
     t.investC = t.invest * t.price
@@ -72,19 +71,19 @@ export function UpdateData(
   return [tickersD, tickersF]
 }
 
-function setMgcNmbs(t: TickerData[], firstTotal: number, balance2: number, mgcNmb1 = 0, mgcNmb2 = 0) {
+function setMgcNmbs(t: TickerData[], totalCurrent: number, balance2: number, mgcNmb1 = 0, mgcNmb2 = 0) {
   t.forEach(t => {
     if (t.alocation === 0) {
     } else if (t.price < t.priceCap) {
       mgcNmb2 += t.alocation * balance2
     } else if (t.price >= t.priceCap) {
-      if (firstTotal > 1) {
-        mgcNmb1 += ((t.price * t.current) / firstTotal) * 100
+      if (totalCurrent > 1) {
+        mgcNmb1 += ((t.price * t.current) / totalCurrent) * 100
       } else {
         mgcNmb1 += 0
       }
     } else {
-      console.log('error')
+      console.error('error')
     }
   })
   return [mgcNmb1, mgcNmb2]

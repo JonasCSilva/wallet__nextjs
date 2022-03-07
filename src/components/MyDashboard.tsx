@@ -18,9 +18,9 @@ export default function MyDashboard() {
   }
 
   return (
-    <VStack>
+    <VStack my={4}>
       <MyHeader />
-      <Tabs isFitted variant='enclosed' width='90%' my={10} isLazy>
+      <Tabs isFitted variant='enclosed' width='90%' isLazy>
         <TabList>
           <Tab {...tabStyle}>Dividendos</Tab>
           <Tab {...tabStyle}>FIIs</Tab>
