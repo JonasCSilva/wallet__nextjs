@@ -33,7 +33,7 @@ export default withApiAuthRequired(async function handler(req: NextApiRequest, r
 
         const response = await sheets.spreadsheets.values.batchGet({
           spreadsheetId: process.env.SPREADSHEET_ID,
-          ranges: ['Dividendos!A2:D', 'FIIs!A2:D']
+          ranges: ['dividendos!A2:D', 'fiis!A2:D']
         })
 
         if (!response.data.valueRanges) {
