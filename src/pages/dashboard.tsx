@@ -2,7 +2,7 @@ import { withPageAuthRequired } from '@auth0/nextjs-auth0'
 import { Center, Heading, Spinner } from '@chakra-ui/react'
 
 import MyDashboard from '../components/MyDashboard'
-import SheetContextProvider from '../contexts/SheetDataContext'
+import TableContextProvider from '../contexts/TableDataContext'
 import UserFullContextProvider from '../contexts/UserFullContext'
 import useUserFullData from '../hooks/useUserFullData'
 
@@ -19,9 +19,9 @@ function Dashboard() {
 
   return (
     <UserFullContextProvider>
-      <SheetContextProvider>
+      <TableContextProvider>
         <MyDashboard />
-      </SheetContextProvider>
+      </TableContextProvider>
     </UserFullContextProvider>
   )
 }

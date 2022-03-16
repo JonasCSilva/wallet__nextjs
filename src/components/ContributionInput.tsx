@@ -6,16 +6,15 @@ import {
   NumberInputStepper,
   Skeleton
 } from '@chakra-ui/react'
-import axios from 'axios'
-import { useEffect, useState, useContext } from 'react'
+import { useState, useContext, useEffect } from 'react'
 
 import { UserFullContext } from '../contexts/UserFullContext'
-import useUserData from '../hooks/useUserFullData'
+import useUserFullData from '../hooks/useUserFullData'
 
 export default function ContributionInput() {
-  const [userFull, setUserFull] = useContext(UserFullContext)
+  const { userFull, updateUserContribution } = useContext(UserFullContext)
   const [value, setValue] = useState<number | string>(100)
-  const { isLoading } = useUserData()
+  const { isLoading } = useUserFullData()
 
   useEffect(() => {
     if (userFull.contribution !== value) setValue(userFull.contribution)
@@ -27,8 +26,12 @@ export default function ContributionInput() {
         min={0}
         max={9999}
         w={28}
-        value={value === 0 ? '' : value}
+        value={value}
         onChange={newValue => {
+          setValue(newValue)
+        }}
+        onBlur={e => {
+          const newValue = e.target.value
           if (newValue === '') {
             setValue(newValue)
           } else if (newValue.search(/\D/) && Number(newValue) <= 9999) {
@@ -39,11 +42,8 @@ export default function ContributionInput() {
               setValue(contribution)
             }
           }
-        }}
-        onBlur={e => {
-          const contribution = Number(e.target.value)
-          axios.patch(`api/user`, { data: { contribution } })
-          setUserFull(prevState => ({ ...prevState, contribution }))
+          const contribution = Number(newValue)
+          updateUserContribution(contribution)
         }}
       >
         <NumberInputField placeholder='Aporte' borderLeftRadius={0} />

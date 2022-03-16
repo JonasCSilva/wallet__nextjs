@@ -5,7 +5,6 @@ import {
   NumberDecrementStepper,
   NumberIncrementStepper
 } from '@chakra-ui/react'
-import axios from 'axios'
 import { useContext, useEffect, useState } from 'react'
 import { Cell } from 'react-table'
 
@@ -18,7 +17,7 @@ export type CurrentInputProps = {
 }
 
 export default function CurrentInput({ cell }: CurrentInputProps) {
-  const [userFull, setUserFull] = useContext(UserFullContext)
+  const { userFull, updateUserCurrents } = useContext(UserFullContext)
   const [value, setValue] = useState(0)
 
   useEffect(() => {
@@ -55,8 +54,7 @@ export default function CurrentInput({ cell }: CurrentInputProps) {
         if (!foundFlag) {
           currents.push({ name: cell.row.values.name, current: newValue })
         }
-        axios.patch(`api/user`, { data: { currents } })
-        setUserFull(prevState => ({ ...prevState, currents }))
+        updateUserCurrents(currents)
       }}
     >
       <NumberInputField fontSize={12} textAlign='center' pl={1} />

@@ -1,9 +1,15 @@
-import { createContext, Dispatch, ReactNode, SetStateAction, useEffect, useMemo, useState } from 'react'
+import axios from 'axios'
+import { createContext, ReactNode, useEffect, useMemo, useState } from 'react'
 
 import useUserFullData from '../hooks/useUserFullData'
 import { CurrentData, UserFull } from '../types/data'
 
-type UserFullContextData = [UserFull['user_metadata'], Dispatch<SetStateAction<UserFull['user_metadata']>>]
+type UserFullContextData = {
+  userFull: UserFull['user_metadata']
+  updateUserBalance: (balance: number) => void
+  updateUserContribution: (contribution: number) => void
+  updateUserCurrents: (currents: CurrentData[]) => void
+}
 
 export const UserFullContext = createContext({} as UserFullContextData)
 
@@ -22,7 +28,29 @@ export default function UserFullContextProvider({ children }: { children: ReactN
     }
   }, [userFullData])
 
-  const userFullValue = useMemo(() => [userFull, setUserFull], [userFull]) as UserFullContextData
+  const updateUserBalance = (balance: number) => {
+    axios.patch(`api/user`, { data: { balance } })
+    setUserFull(prevState => ({ ...prevState, balance }))
+  }
+
+  const updateUserContribution = (contribution: number) => {
+    axios.patch(`api/user`, { data: { contribution } })
+    setUserFull(prevState => ({ ...prevState, contribution }))
+  }
+
+  const updateUserCurrents = (currents: CurrentData[]) => {
+    axios.patch(`api/user`, { data: { currents } })
+    setUserFull(prevState => ({ ...prevState, currents }))
+  }
+
+  const userFullValue = useMemo(() => {
+    return {
+      userFull,
+      updateUserBalance,
+      updateUserContribution,
+      updateUserCurrents
+    }
+  }, [userFull]) as UserFullContextData
 
   return <UserFullContext.Provider value={userFullValue}>{children}</UserFullContext.Provider>
 }

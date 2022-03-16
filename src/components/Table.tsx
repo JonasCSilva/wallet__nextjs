@@ -3,22 +3,22 @@ import { Table, Thead, Tbody, Tr, Th, Td, Text, chakra, Skeleton, Tfoot } from '
 import { useEffect, useMemo, useState, useContext } from 'react'
 import { useTable, useSortBy, Cell } from 'react-table'
 
-import { SheetDataContext } from '../contexts/SheetDataContext'
+import { TableDataContext } from '../contexts/TableDataContext'
 import { headersAndFooters } from '../headerAndFooters'
 import { bg3 } from '../theme'
 import { TickerData } from '../types/data'
 import CurrentInput from './CurrentInput'
 
 export default function MyTable({ index }: { index: number }) {
-  const [sheetDataState] = useContext(SheetDataContext)
+  const [tableDataState] = useContext(TableDataContext)
 
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
-    if (sheetDataState[0][0].name !== 'DUMMY' && isLoading) {
+    if (tableDataState[0][0].name !== 'DUMMY' && isLoading) {
       setIsLoading(false)
     }
-  }, [sheetDataState])
+  }, [tableDataState])
 
   function frmt(value: number) {
     return Number(value.toFixed(2))
@@ -26,7 +26,7 @@ export default function MyTable({ index }: { index: number }) {
 
   const columns = useMemo(() => headersAndFooters, [])
 
-  const data = useMemo(() => sheetDataState[index], [sheetDataState[index]])
+  const data = useMemo(() => tableDataState[index], [tableDataState[index]])
 
   const { getTableProps, getTableBodyProps, headerGroups, footerGroups, rows, prepareRow } = useTable(
     {

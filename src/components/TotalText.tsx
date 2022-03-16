@@ -1,25 +1,25 @@
 import { Skeleton, Heading } from '@chakra-ui/react'
 import { useContext, useEffect, useState } from 'react'
 
-import { SheetDataContext } from '../contexts/SheetDataContext'
+import { TableDataContext } from '../contexts/TableDataContext'
 import { TickerData } from '../types/data'
 
 export default function TotalText() {
   const [totalCurrent, setTotalCurrent] = useState(0)
-  const [sheetDataState] = useContext(SheetDataContext)
+  const [tableDataState] = useContext(TableDataContext)
 
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
-    if (sheetDataState[0][0].name !== 'DUMMY' && isLoading) {
+    if (tableDataState[0][0].name !== 'DUMMY' && isLoading) {
       setIsLoading(false)
     }
-  }, [sheetDataState])
+  }, [tableDataState])
 
   useEffect(() => {
-    const newTotal = Number(total(sheetDataState).toFixed(2))
+    const newTotal = Number(total(tableDataState).toFixed(2))
     setTotalCurrent(newTotal)
-  }, [sheetDataState])
+  }, [tableDataState])
 
   function total(tickers: TickerData[][]) {
     let sum = 0
