@@ -1,6 +1,6 @@
 {
-  "extends": ["next/core-web-vitals", "universe/web", "prettier"],
-  "parser": "@typescript-eslint/parser",
+  "extends": ["universe/node", "universe/web", "next/core-web-vitals"]
+  /* "parser": "@typescript-eslint/parser",
   "rules": {
     "@typescript-eslint/no-unused-vars": "warn",
     "@typescript-eslint/no-explicit-any": "off",
@@ -17,5 +17,5 @@
     "max-len": ["warn", { "code": 120 }],
     "arrow-parens": ["warn", "as-needed"],
     "jsx-quotes": ["warn", "prefer-single"]
-  }
+  } */
 }

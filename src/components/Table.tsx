@@ -1,16 +1,16 @@
 import { TriangleDownIcon, TriangleUpIcon } from '@chakra-ui/icons'
 import { Table, Thead, Tbody, Tr, Th, Td, Text, chakra, Skeleton, Tfoot } from '@chakra-ui/react'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useState, useContext } from 'react'
 import { useTable, useSortBy, Cell } from 'react-table'
 
+import { SheetDataContext } from '../contexts/SheetDataContext'
 import { headersAndFooters } from '../headerAndFooters'
-import useSheetDataContext from '../hooks/useSheetDataContext'
 import { bg3 } from '../theme'
 import { TickerData } from '../types/data'
 import CurrentInput from './CurrentInput'
 
 export default function MyTable({ index }: { index: number }) {
-  const [sheetDataState] = useSheetDataContext()
+  const [sheetDataState] = useContext(SheetDataContext)
 
   const [isLoading, setIsLoading] = useState(true)
 

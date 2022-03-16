@@ -6,11 +6,11 @@ import {
   NumberIncrementStepper
 } from '@chakra-ui/react'
 import axios from 'axios'
-import { useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { Cell } from 'react-table'
 
+import { UserFullContext } from '../contexts/UserFullContext'
 import { getCurrent } from '../dashboardFunctions'
-import useUserCurrentsContext from '../hooks/useUserCurrentsContext'
 import { TickerData } from '../types/data'
 
 export type CurrentInputProps = {
@@ -18,17 +18,17 @@ export type CurrentInputProps = {
 }
 
 export default function CurrentInput({ cell }: CurrentInputProps) {
-  const [userCurrents, setUserCurrents] = useUserCurrentsContext()
+  const [userFull, setUserFull] = useContext(UserFullContext)
   const [value, setValue] = useState(0)
 
   useEffect(() => {
     if (cell.row.values.name !== 'DUMMY') {
-      const current = getCurrent(cell.row.values.name, userCurrents)
+      const current = getCurrent(cell.row.values.name, userFull.currents)
       if (current && current !== value) {
         setValue(current)
       }
     }
-  }, [userCurrents, cell.row.values.name])
+  }, [userFull.currents, cell.row.values.name])
 
   return (
     <NumberInput
@@ -44,7 +44,7 @@ export default function CurrentInput({ cell }: CurrentInputProps) {
       }}
       onBlur={e => {
         const newValue = Number(e.target.value)
-        const currents = [...userCurrents]
+        const currents = [...userFull.currents]
         let foundFlag = false
         for (const item of currents) {
           if (item.name === cell.row.values.name) {
@@ -56,7 +56,7 @@ export default function CurrentInput({ cell }: CurrentInputProps) {
           currents.push({ name: cell.row.values.name, current: newValue })
         }
         axios.patch(`api/user`, { data: { currents } })
-        setUserCurrents(currents)
+        setUserFull(prevState => ({ ...prevState, currents }))
       }}
     >
       <NumberInputField fontSize={12} textAlign='center' pl={1} />

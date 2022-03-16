@@ -3,9 +3,7 @@ import { Center, Heading, Spinner } from '@chakra-ui/react'
 
 import MyDashboard from '../components/MyDashboard'
 import SheetContextProvider from '../contexts/SheetDataContext'
-import UserBalanceContextProvider from '../contexts/UserBalanceContext'
-import UserContributionContextProvider from '../contexts/UserContributionContext'
-import UserCurrentsContextProvider from '../contexts/UserCurrentsContext'
+import UserFullContextProvider from '../contexts/UserFullContext'
 import useUserFullData from '../hooks/useUserFullData'
 
 function Dashboard() {
@@ -20,15 +18,11 @@ function Dashboard() {
   }
 
   return (
-    <UserContributionContextProvider>
-      <UserBalanceContextProvider>
-        <UserCurrentsContextProvider>
-          <SheetContextProvider>
-            <MyDashboard />
-          </SheetContextProvider>
-        </UserCurrentsContextProvider>
-      </UserBalanceContextProvider>
-    </UserContributionContextProvider>
+    <UserFullContextProvider>
+      <SheetContextProvider>
+        <MyDashboard />
+      </SheetContextProvider>
+    </UserFullContextProvider>
   )
 }
 

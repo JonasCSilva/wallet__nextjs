@@ -13,21 +13,21 @@ import {
   Skeleton
 } from '@chakra-ui/react'
 import axios from 'axios'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useContext } from 'react'
 
-import useUserBalanceContext from '../hooks/useUserBalanceContext'
+import { UserFullContext } from '../contexts/UserFullContext'
 import useUserFullData from '../hooks/useUserFullData'
 
 export default function BalanceSlider() {
-  const [userBalance, setUserBalance] = useUserBalanceContext()
+  const [userFull, setUserFull] = useContext(UserFullContext)
   const { isLoading } = useUserFullData()
   const [value, setValue] = useState(50)
 
   const handleChange = (value: number) => setValue(value)
 
   useEffect(() => {
-    if (userBalance !== value) setValue(userBalance)
-  }, [userBalance])
+    if (userFull.balance !== value) setValue(userFull.balance)
+  }, [userFull.balance])
 
   return (
     <Flex justify='center' align='center'>
@@ -40,7 +40,7 @@ export default function BalanceSlider() {
           onBlur={e => {
             const balance = Number(e.target.value)
             axios.patch(`api/user`, { data: { balance } })
-            setUserBalance(balance)
+            setUserFull(prevState => ({ ...prevState, balance }))
           }}
         >
           <NumberInputField fontSize={14} textAlign='center' pl={1} />
@@ -63,7 +63,7 @@ export default function BalanceSlider() {
             step={5}
             onChangeEnd={balance => {
               axios.patch(`api/user`, { data: { balance } })
-              setUserBalance(balance)
+              setUserFull(prevState => ({ ...prevState, balance }))
             }}
             onChange={handleChange}
             focusThumbOnChange={false}

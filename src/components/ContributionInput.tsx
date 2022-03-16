@@ -7,19 +7,19 @@ import {
   Skeleton
 } from '@chakra-ui/react'
 import axios from 'axios'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useContext } from 'react'
 
-import useUserContributionContext from '../hooks/useUserContributionContext'
+import { UserFullContext } from '../contexts/UserFullContext'
 import useUserData from '../hooks/useUserFullData'
 
 export default function ContributionInput() {
-  const [userContribution, setUserContribution] = useUserContributionContext()
+  const [userFull, setUserFull] = useContext(UserFullContext)
   const [value, setValue] = useState<number | string>(100)
   const { isLoading } = useUserData()
 
   useEffect(() => {
-    if (userContribution !== value) setValue(userContribution)
-  }, [userContribution])
+    if (userFull.contribution !== value) setValue(userFull.contribution)
+  }, [userFull.contribution])
 
   return (
     <Skeleton isLoaded={!isLoading}>
@@ -43,7 +43,7 @@ export default function ContributionInput() {
         onBlur={e => {
           const contribution = Number(e.target.value)
           axios.patch(`api/user`, { data: { contribution } })
-          setUserContribution(contribution)
+          setUserFull(prevState => ({ ...prevState, contribution }))
         }}
       >
         <NumberInputField placeholder='Aporte' borderLeftRadius={0} />

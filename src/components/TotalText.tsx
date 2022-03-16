@@ -1,12 +1,12 @@
 import { Skeleton, Heading } from '@chakra-ui/react'
-import { useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 
-import useSheetDataContext from '../hooks/useSheetDataContext'
+import { SheetDataContext } from '../contexts/SheetDataContext'
 import { TickerData } from '../types/data'
 
 export default function TotalText() {
   const [totalCurrent, setTotalCurrent] = useState(0)
-  const [sheetDataState] = useSheetDataContext()
+  const [sheetDataState] = useContext(SheetDataContext)
 
   const [isLoading, setIsLoading] = useState(true)
 

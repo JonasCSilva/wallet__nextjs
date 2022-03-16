@@ -1,4 +1,4 @@
-import { CurrentData, TickerData } from './types/data'
+import { CurrentData, TickerData, UserFull } from './types/data'
 
 export function rounder(investR: number, price: number) {
   const test = investR / price
@@ -31,39 +31,46 @@ export function total(tickers: TickerData[]) {
   return sum
 }
 
-export function UpdateData(
-  sheetData: TickerData[][],
-  userBalance: number,
-  userContribution: number,
-  userCurrents: CurrentData[]
-) {
+export function UpdateData(sheetData: TickerData[][], userFullData: UserFull['user_metadata']) {
   const tickersD = [...sheetData[0]]
   const tickersF = [...sheetData[1]]
   tickersD.forEach(t => {
-    t.current = getCurrent(t.name, userCurrents)
+    t.current = getCurrent(t.name, userFullData.currents)
     t.currentR = Number((t.price * t.current).toFixed(2))
   })
   tickersF.forEach(t => {
-    t.current = getCurrent(t.name, userCurrents)
+    t.current = getCurrent(t.name, userFullData.currents)
     t.currentR = Number((t.price * t.current).toFixed(2))
   })
   const totalD = total(tickersD)
   const totalF = total(tickersF)
   const totalCurrent = totalD + totalF
-  const [mgcNmb11, mgcNmb12] = setMgcNmbs([...tickersD], totalCurrent, 1 - userBalance / 100)
-  const [mgcNmb21, mgcNmb22] = setMgcNmbs([...tickersF], totalCurrent, userBalance / 100, mgcNmb11, mgcNmb12)
+  const [mgcNmb11, mgcNmb12] = setMgcNmbs([...tickersD], totalCurrent, 1 - userFullData.balance / 100)
+  const [mgcNmb21, mgcNmb22] = setMgcNmbs([...tickersF], totalCurrent, userFullData.balance / 100, mgcNmb11, mgcNmb12)
   tickersD.forEach(t => {
-    t.currentP = ((t.price * t.current) / (totalCurrent + userContribution)) * 100
-    t.objective = setObjectiveF(t, totalCurrent + userContribution, 1 - userBalance / 100, mgcNmb21, mgcNmb22)
-    t.objectiveR = (t.objective * (totalCurrent + userContribution)) / 100
+    t.currentP = ((t.price * t.current) / (totalCurrent + userFullData.contribution)) * 100
+    t.objective = setObjectiveF(
+      t,
+      totalCurrent + userFullData.contribution,
+      1 - userFullData.balance / 100,
+      mgcNmb21,
+      mgcNmb22
+    )
+    t.objectiveR = (t.objective * (totalCurrent + userFullData.contribution)) / 100
     t.investR = t.objectiveR - t.currentR
     t.invest = rounder(t.investR, t.price)
     t.investC = t.invest * t.price
   })
   tickersF.forEach(t => {
-    t.currentP = ((t.price * t.current) / (totalCurrent + userContribution)) * 100
-    t.objective = setObjectiveF(t, totalCurrent + userContribution, userBalance / 100, mgcNmb21, mgcNmb22)
-    t.objectiveR = (t.objective * (totalCurrent + userContribution)) / 100
+    t.currentP = ((t.price * t.current) / (totalCurrent + userFullData.contribution)) * 100
+    t.objective = setObjectiveF(
+      t,
+      totalCurrent + userFullData.contribution,
+      userFullData.balance / 100,
+      mgcNmb21,
+      mgcNmb22
+    )
+    t.objectiveR = (t.objective * (totalCurrent + userFullData.contribution)) / 100
     t.investR = t.objectiveR - t.currentR
     t.invest = rounder(t.investR, t.price)
     t.investC = t.invest * t.price

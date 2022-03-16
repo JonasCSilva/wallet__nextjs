@@ -1,22 +1,25 @@
 import { useUser } from '@auth0/nextjs-auth0'
 import axios from 'axios'
 import { useMemo } from 'react'
-import useSWRImmutable from 'swr'
+import { useQuery } from 'react-query'
 
 import { UserFull } from '../types/data'
 
-const fetcher = (url: string) => axios.get(url).then((res: { data: UserFull }) => res.data)
+const fetcher = () => axios.get('/api/user').then((res: { data: UserFull }) => res.data)
 
 export default function useUserFullData() {
-  const { user, error: error1 } = useUser()
-  const { data, error: error2 } = useSWRImmutable(() => (user ? `/api/user` : null), fetcher)
+  const { user, error } = useUser()
+
+  const { isLoading, isError, data } = useQuery('user', fetcher, {
+    enabled: !!user
+  })
 
   return useMemo(
     () => ({
       userFullData: data,
-      isLoading: (!error1 || !error2) && !data,
-      isError: error1 || error2
+      isLoading: !error && isLoading,
+      isError: error || isError
     }),
-    [data, error1, error2]
+    [data, error, isError, isLoading]
   )
 }

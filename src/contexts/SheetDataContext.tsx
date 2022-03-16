@@ -1,39 +1,35 @@
 import axios from 'axios'
-import { createContext, Dispatch, ReactNode, SetStateAction, useEffect, useMemo, useState } from 'react'
-import useSWRImmutable from 'swr'
+import { createContext, Dispatch, ReactNode, SetStateAction, useContext, useEffect, useMemo, useState } from 'react'
+import { useQuery } from 'react-query'
 
 import { UpdateData } from '../dashboardFunctions'
 import dummyData from '../dummyData'
-import useUserBalanceContext from '../hooks/useUserBalanceContext'
-import useUserContributionContext from '../hooks/useUserContributionContext'
-import useUserCurrentsContext from '../hooks/useUserCurrentsContext'
 import { TickerData } from '../types/data'
+import { UserFullContext } from './UserFullContext'
 
 type SheetContextData = [TickerData[][], Dispatch<SetStateAction<TickerData[][]>>]
 
-const fetcher = (url: string) => axios.get(url).then((res: { data: TickerData[][] }) => res.data)
+const fetcher = () => axios.get('/api/sheet').then((res: { data: TickerData[][] }) => res.data)
 
 export const SheetDataContext = createContext({} as SheetContextData)
 
 export default function SheetContextProvider({ children }: { children: ReactNode }) {
-  const { data: sheetData, error } = useSWRImmutable(() => `/api/sheet`, fetcher)
+  const { isError, data: sheetData } = useQuery('sheet', fetcher)
 
-  const [userBalance] = useUserBalanceContext()
-  const [userContribution] = useUserContributionContext()
-  const [userCurrents] = useUserCurrentsContext()
-
-  if (error) {
-    throw new Error(error)
-  }
+  const [userFullData] = useContext(UserFullContext)
 
   const [sheetDataState, setSheetDataState] = useState<TickerData[][]>([dummyData, dummyData])
 
+  if (isError) {
+    throw new Error('Error in SheetDataContext')
+  }
+
   useEffect(() => {
     if (sheetData) {
-      const newData = UpdateData(sheetData, userBalance, userContribution, userCurrents)
+      const newData = UpdateData(sheetData, userFullData)
       setSheetDataState(newData)
     }
-  }, [sheetData, userBalance, userContribution, userCurrents])
+  }, [sheetData, userFullData])
 
   const userBalanceValue = useMemo(() => [sheetDataState, setSheetDataState], [sheetDataState]) as SheetContextData
 
