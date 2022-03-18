@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { createContext, ReactNode, useEffect, useMemo, useState } from 'react'
+import { createContext, ReactNode, useContext, useEffect, useMemo, useState } from 'react'
 
 import useUserFullData from '../hooks/useUserFullData'
 import { CurrentData, UserFull } from '../types/data'
@@ -11,7 +11,9 @@ type UserFullContextData = {
   updateUserCurrents: (currents: CurrentData[]) => void
 }
 
-export const UserFullContext = createContext({} as UserFullContextData)
+const UserFullContext = createContext({} as UserFullContextData)
+
+export const useUserFull = () => useContext(UserFullContext)
 
 export default function UserFullContextProvider({ children }: { children: ReactNode }) {
   const { userFullData } = useUserFullData()

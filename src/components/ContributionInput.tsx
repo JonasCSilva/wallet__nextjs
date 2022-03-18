@@ -6,13 +6,13 @@ import {
   NumberInputStepper,
   Skeleton
 } from '@chakra-ui/react'
-import { useState, useContext, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 
-import { UserFullContext } from '../contexts/UserFullContext'
+import { useUserFull } from '../contexts/UserFullContext'
 import useUserFullData from '../hooks/useUserFullData'
 
 export default function ContributionInput() {
-  const { userFull, updateUserContribution } = useContext(UserFullContext)
+  const { userFull, updateUserContribution } = useUserFull()
   const [value, setValue] = useState<number | string>(100)
   const { isLoading } = useUserFullData()
 

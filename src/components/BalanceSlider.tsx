@@ -12,13 +12,13 @@ import {
   Heading,
   Skeleton
 } from '@chakra-ui/react'
-import { useState, useEffect, useContext } from 'react'
+import { useState, useEffect } from 'react'
 
-import { UserFullContext } from '../contexts/UserFullContext'
+import { useUserFull } from '../contexts/UserFullContext'
 import useUserFullData from '../hooks/useUserFullData'
 
 export default function BalanceSlider() {
-  const { userFull, updateUserBalance } = useContext(UserFullContext)
+  const { userFull, updateUserBalance } = useUserFull()
   const { isLoading } = useUserFullData()
   const [value, setValue] = useState(50)
 

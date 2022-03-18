@@ -1,12 +1,12 @@
 import { Skeleton, Heading } from '@chakra-ui/react'
-import { useContext, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 
-import { TableDataContext } from '../contexts/TableDataContext'
+import { useTableData } from '../contexts/TableDataContext'
 import { TickerData } from '../types/data'
 
 export default function TotalText() {
   const [totalCurrent, setTotalCurrent] = useState(0)
-  const [tableDataState] = useContext(TableDataContext)
+  const [tableDataState] = useTableData()
 
   const [isLoading, setIsLoading] = useState(true)
 

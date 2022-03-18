@@ -5,10 +5,10 @@ import {
   NumberDecrementStepper,
   NumberIncrementStepper
 } from '@chakra-ui/react'
-import { useContext, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Cell } from 'react-table'
 
-import { UserFullContext } from '../contexts/UserFullContext'
+import { useUserFull } from '../contexts/UserFullContext'
 import { getCurrent } from '../dashboardFunctions'
 import { TickerData } from '../types/data'
 
@@ -17,7 +17,7 @@ export type CurrentInputProps = {
 }
 
 export default function CurrentInput({ cell }: CurrentInputProps) {
-  const { userFull, updateUserCurrents } = useContext(UserFullContext)
+  const { userFull, updateUserCurrents } = useUserFull()
   const [value, setValue] = useState(0)
 
   useEffect(() => {
